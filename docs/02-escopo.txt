@@ -1,0 +1,73 @@
+PRÉVIA - ESCOPO DO PROJETO
+Versão 1.0 - novembro de 2026
+Fontes: Documento de Projeto de Startup (Instrumento 1) e Proposta de Valor e
+Perfil do Cliente (Instrumento 2), em docs/PDFArquivos.
+
+
+1. OBJETIVO DO MVP
+
+Mostrar ao dono de uma pequena empresa B2B quanto imposto (IBS e CBS) será
+retido pelo split payment em cada venda e como essa retenção afeta o caixa nos
+próximos meses.
+
+O MVP é uma demonstração da proposta de valor. As integrações externas não
+precisam funcionar nesta fase: elas aparecem no produto como telas com o aviso
+"Em desenvolvimento", para mostrar onde o produto vai chegar.
+
+
+2. DENTRO DO ESCOPO (FUNCIONANDO NO MVP)
+
+- Cadastro da empresa: nome, regime tributário (Simples Nacional ou Lucro
+  Presumido) e dados básicos para a simulação.
+- Entrada de vendas e recebimentos sem depender de integração, de três
+  formas: lançamento manual, planilha modelo (CSV) e dados de exemplo.
+- Painel do contador: um escritório acompanha vários clientes (empresas) no
+  mesmo app, cada um com seus números separados.
+- Simulação da retenção de IBS e CBS sobre cada venda.
+- Comparação entre valor vendido (bruto) e valor que entra no caixa (líquido).
+- Projeção do fluxo de caixa mês a mês.
+- Cálculo da perda de capital de giro (o "float tributário" que deixa de
+  existir).
+- Linha do tempo da transição (2026 a 2033), com as regras de cada etapa.
+- Linguagem simples, sem termos técnicos, voltada ao empresário.
+
+
+3. NO MVP APENAS COMO TELA ("EM DESENVOLVIMENTO")
+
+Estas funções aparecem na interface, mas não funcionam ainda:
+
+- Importação automática de notas fiscais (XML da NF-e / SEFAZ).
+- Conexão com o banco para buscar recebimentos (Open Finance).
+- Integração com ERPs e sistemas contábeis.
+- Originação de crédito (encaminhar a empresa para financiamento quando a
+  simulação mostrar falta de caixa).
+
+
+4. FORA DO ESCOPO
+
+- Vendas ao consumidor final (B2C) e pagamentos com cartão. O split payment
+  deve começar pelas operações entre empresas.
+- MEIs. Segmento previsto para uma fase futura.
+- Médias e grandes empresas. Médias são público secundário; grandes já são
+  atendidas por plataformas corporativas.
+- Emissão de nota fiscal, apuração e pagamento de guias. A Prévia simula o
+  impacto; não substitui o ERP nem o contador.
+
+
+5. A DEFINIR
+
+- Quais alíquotas de referência usar em cada ano da transição e de qual fonte.
+  Até lá, o MVP usa 26,5% como valor provisório, num arquivo de configuração.
+
+
+6. PREMISSAS
+
+- O split payment começa em 2027, de forma facultativa, e alcança primeiro as
+  operações B2B.
+- Regras e alíquotas mudam até 2033. Por isso os valores usados na simulação
+  precisam ser configuráveis por ano, não fixos no código.
+- O resultado da simulação é uma estimativa para planejamento, não uma
+  orientação tributária oficial.
+- O MVP é um app desktop (Next.js dentro do Electron). Os dados ficam salvos
+  só no computador do usuário (localStorage), sem servidor, banco externo ou
+  API.

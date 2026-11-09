@@ -1,0 +1,72 @@
+@import "tailwindcss";
+
+/*
+  Tokens da direção B, "A venda dividida", tirados do canvas de telas:
+  https://claude.ai/artifact/F6p5rXECTuSeTshRrtcLRq
+  Verde é o que fica com a empresa; âmbar é o que vai para o governo.
+*/
+@theme {
+  /* Faixa superior */
+  --color-petroleo: #0f2a2e;
+  --color-petroleo-medio: #1e3d42;
+  --color-petroleo-claro: #2e4d52;
+  --color-nevoa: #a8c3c0;
+
+  /* Fundo e superfícies */
+  --color-mineral: #eef2f0;
+  --color-mineral-claro: #f2f6f5;
+  --color-papel: #ffffff;
+  --color-texto-suave: #4e5f61;
+  --color-linha: #d5deda;
+  --color-linha-suave: #e6ece9;
+  --color-campo: #c5d1cd;
+  --color-tracejado: #afc0bb;
+  --color-selo: #dce5e2;
+  --color-selo-texto: #2e4346;
+
+  /* Fica com você */
+  --color-verde: #17786c;
+  --color-verde-texto: #0f6e66;
+  --color-verde-escuro: #0a4f49;
+  --color-verde-claro: #a9d3cc;
+  --color-verde-fundo: #d7eeea;
+
+  /* Vai para o governo */
+  --color-ambar: #f0a33a;
+  --color-ambar-texto: #8a4f05;
+  --color-ambar-claro: #f6d29c;
+  --color-ambar-fundo: #fdf1de;
+
+  --radius-campo: 12px;
+  --radius-bloco: 20px;
+  --radius-cartao: 24px;
+}
+
+@theme inline {
+  --font-sans: var(--font-geist), system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-geist), sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-mineral font-sans text-petroleo antialiased;
+  }
+
+  a {
+    color: var(--color-verde-texto);
+  }
+
+  a:hover {
+    color: var(--color-verde-escuro);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-petroleo);
+    outline-offset: 2px;
+  }
+
+  /* Na faixa escura o contorno de foco precisa ser claro. */
+  .faixa :focus-visible {
+    outline-color: var(--color-ambar);
+  }
+}
