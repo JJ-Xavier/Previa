@@ -25,6 +25,7 @@ npm run dev
 | `npm run dev:web` | Só o Next, para testar no navegador |
 | `npm run build` | Gera o export estático em `out/` |
 | `npm start` | Gera o build e abre o app como no instalador |
+| `npm test` | Roda os testes do cálculo e do armazenamento |
 | `npm run lint` | Verifica o código |
 
 ## Onde fica cada coisa
@@ -32,5 +33,12 @@ npm run dev
 - `src/app/(app)/`: telas com o menu (Painel, Projeção, Vendas, Transição, Em breve, Clientes)
 - `src/app/(acesso)/`: Entrar e Cadastro
 - `src/components/`: peças compartilhadas
+- `src/lib/`: o motor, sem tela
+  - `armazenamento.ts`: único lugar que lê e grava os dados. As telas usam `useDados()` e as funções daqui, nunca o localStorage direto
+  - `calculo.ts`: retenção, resumo do mês, projeção, mês de maior retenção e capital de giro
+  - `aliquotas.ts`: alíquota por ano e regime (26,5% provisória)
+  - `exemplo.ts`: a empresa de exemplo, com os mesmos números do canvas
+  - `formatar.ts`: reais e nome do mês para mostrar na tela
+  - `tipos.ts`: `Empresa`, `Venda` e `ResumoDoMes`. Dinheiro sempre em centavos
 - `src/app/globals.css`: cores, fontes e raios do visual, tirados do canvas
 - `electron/main.mjs`: janela do app

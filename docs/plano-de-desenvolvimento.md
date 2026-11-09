@@ -18,7 +18,7 @@ e pode ser mostrado. Ao fim da etapa 7, o app está pronto.
 | Entrada de dados | Lançamento manual, planilha modelo (CSV) e dados de exemplo. |
 | Público | Empresário e contador (painel com vários clientes). |
 | Visual | Direção B do canvas: faixa petróleo `#0F2A2E`, verde `#17786C` para "fica com você", âmbar `#F0A33A` para "vai para o governo". Fontes Bricolage Grotesque e Geist. |
-| Alíquota | 26,5% provisória, num arquivo de configuração por ano e regime, até o time definir a oficial. |
+| Alíquota | 26,5% provisória, em `src/lib/aliquotas.ts` por ano e regime, até o time definir a oficial. |
 | Integrações | NF-e, banco, ERP e crédito aparecem só como tela "em breve". |
 
 ## Ordem das etapas
@@ -53,12 +53,12 @@ Uma janela do Electron abre o Next.js com o menu e as telas vazias.
 
 O motor da Prévia, ainda sem tela.
 
-- [ ] Definir os tipos `Empresa` (nome, CNPJ, regime, prazo médio de recebimento) e `Venda` (cliente, valor, data da venda, data de recebimento).
-- [ ] Criar um único módulo de armazenamento que lê e grava no localStorage. Ele guarda uma lista de empresas e qual está ativa, o que já prepara o painel do contador. As telas nunca acessam o localStorage direto, então trocar por um banco depois mexe só nesse arquivo.
-- [ ] Criar `aliquotas.ts` com a alíquota por ano e por regime.
-- [ ] Escrever as funções de cálculo: retenção de uma venda, resumo do mês (recebido, governo, fica com você), projeção dos próximos meses, mês de maior retenção e capital de giro médio.
-- [ ] Criar os dados de exemplo: uma empresa fictícia com vendas de janeiro a junho de 2027.
-- [ ] Testar as funções de cálculo com Vitest.
+- [x] Definir os tipos `Empresa` (nome, CNPJ, regime, prazo médio de recebimento) e `Venda` (cliente, valor, data da venda, data de recebimento).
+- [x] Criar um único módulo de armazenamento que lê e grava no localStorage. Ele guarda uma lista de empresas e qual está ativa, o que já prepara o painel do contador. As telas nunca acessam o localStorage direto, então trocar por um banco depois mexe só nesse arquivo.
+- [x] Criar `aliquotas.ts` com a alíquota por ano e por regime.
+- [x] Escrever as funções de cálculo: retenção de uma venda, resumo do mês (recebido, governo, fica com você), projeção dos próximos meses, mês de maior retenção e capital de giro médio.
+- [x] Criar os dados de exemplo: uma empresa fictícia com vendas de janeiro a junho de 2027.
+- [x] Testar as funções de cálculo com Vitest.
 
 **Pronto quando:** com os dados de exemplo, março mostra R$ 48.000,00 recebidos, R$ 12.720,00 para o governo e R$ 35.280,00 com a empresa, como no canvas.
 

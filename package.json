@@ -8,7 +8,8 @@
     "dev:web": "next dev",
     "build": "next build",
     "start": "next build && electron . --prod",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run"
   },
   "dependencies": {
     "electron-serve": "^3.0.1",
@@ -18,7 +19,7 @@
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
-    "@types/node": "^20",
+    "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "concurrently": "^10.0.7",
@@ -27,6 +28,7 @@
     "eslint-config-next": "16.4.5",
     "tailwindcss": "^4",
     "typescript": "^5",
+    "vitest": "^5.1.0",
     "wait-on": "^9.5.1"
   }
 }
