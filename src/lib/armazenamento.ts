@@ -8,10 +8,15 @@ import type { Empresa, Venda } from "./tipos";
  * arquivo.
  */
 
+/** Empresário acompanha a própria empresa; contador acompanha vários clientes. */
+export type Perfil = "empresario" | "contador";
+
 export type Dados = {
   empresas: Empresa[];
   /** Empresa que as telas mostram. Para o contador, é o cliente aberto. */
   ativaId: string | null;
+  /** Escolhido no primeiro acesso. Dados antigos, sem perfil, contam como empresário. */
+  perfil?: Perfil;
 };
 
 const CHAVE = "previa:dados";
@@ -66,15 +71,21 @@ export function empresaAtiva(dados: Dados): Empresa | null {
   return dados.empresas.find((e) => e.id === dados.ativaId) ?? null;
 }
 
+export function definirPerfil(perfil: Perfil) {
+  gravar({ ...ler(), perfil });
+}
+
 export function novoId(): string {
   return crypto.randomUUID();
 }
 
 /** Cria ou atualiza a empresa (pelo id). Se nenhuma estiver ativa, ela passa a ser. */
 export function salvarEmpresa(empresa: Empresa) {
-  const { empresas, ativaId } = ler();
+  const dados = ler();
+  const { empresas, ativaId } = dados;
   const existe = empresas.some((e) => e.id === empresa.id);
   gravar({
+    ...dados,
     empresas: existe
       ? empresas.map((e) => (e.id === empresa.id ? empresa : e))
       : [...empresas, empresa],
@@ -83,9 +94,11 @@ export function salvarEmpresa(empresa: Empresa) {
 }
 
 export function removerEmpresa(id: string) {
-  const { empresas, ativaId } = ler();
-  const restantes = empresas.filter((e) => e.id !== id);
+  const dados = ler();
+  const restantes = dados.empresas.filter((e) => e.id !== id);
+  const { ativaId } = dados;
   gravar({
+    ...dados,
     empresas: restantes,
     ativaId: ativaId === id ? (restantes[0]?.id ?? null) : ativaId,
   });

@@ -10,6 +10,7 @@ import {
   projecao,
   resumoDoMes,
   totais,
+  visaoGeral,
 } from "./calculo";
 import { somarDias, somarMeses } from "./datas";
 import { criarEmpresaExemplo } from "./exemplo";
@@ -112,6 +113,16 @@ describe("janela do Painel e da Projeção", () => {
   it("perto do fim das vendas, a janela volta para não sobrar mês vazio", () => {
     expect(inicioDaJanela(periodo, "2027-05", 6)).toBe("2027-01");
     expect(inicioDaJanela({ primeiro: "2026-01", ultimo: "2026-06" }, "2026-11", 6)).toBe("2026-01");
+  });
+
+  it("a visão geral do exemplo abre em janeiro de 2027, com R$ 12.720 de capital de giro", () => {
+    const visao = visaoGeral(exemplo, "2026-11")!;
+    expect(visao.mes).toBe("2027-01");
+    expect(visao.resumo.governo).toBe(1_166_000);
+    expect(visao.inicio).toBe("2027-01");
+    expect(visao.maior?.mes).toBe("2027-05");
+    expect(visao.capitalDeGiro).toBe(1_272_000);
+    expect(visaoGeral({ ...exemplo, vendas: [] }, "2026-11")).toBeUndefined();
   });
 
   it("dividirValor dá os R$ 73,50 de cada R$ 100", () => {

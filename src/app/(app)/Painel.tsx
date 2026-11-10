@@ -1,21 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState, type ReactNode } from "react";
 import { EstadoVazio } from "@/components/EstadoVazio";
 import { FaixaDividida } from "@/components/FaixaDividida";
 import { SeloEmBreve } from "@/components/SeloEmBreve";
 import { empresaAtiva, useDados } from "@/lib/armazenamento";
-import {
-  capitalDeGiroMedio,
-  dividirValor,
-  inicioDaJanela,
-  mesDeMaiorRetencao,
-  periodoComRecebimento,
-  projecao,
-  resumoDoMes,
-  type Periodo,
-} from "@/lib/calculo";
+import { dividirValor, resumoDoMes, visaoGeral, type VisaoGeral } from "@/lib/calculo";
 import { limitar, mesAtual, somarMeses } from "@/lib/datas";
 import { comMaiuscula, nomeDoMes, reais } from "@/lib/formatar";
 import type { Empresa, Mes } from "@/lib/tipos";
@@ -23,28 +15,32 @@ import { GraficoMeses } from "./GraficoMeses";
 
 export function Painel() {
   const dados = useDados();
-  if (!dados) return null;
+  const router = useRouter();
+
+  // Primeiro acesso, sem perfil e sem empresa: a pessoa escolhe como vai usar a Prévia.
+  const primeiroAcesso = dados !== null && !dados.perfil && dados.empresas.length === 0;
+  useEffect(() => {
+    if (primeiroAcesso) router.replace("/perfil/");
+  }, [primeiroAcesso, router]);
+  if (!dados || primeiroAcesso) return null;
 
   const empresa = empresaAtiva(dados);
-  const periodo = empresa && periodoComRecebimento(empresa);
-  if (!empresa || !periodo) return <EstadoVazio titulo="Painel" temEmpresa={!!empresa} />;
+  const visao = empresa && visaoGeral(empresa, mesAtual());
+  if (!empresa || !visao) return <EstadoVazio titulo="Painel" temEmpresa={!!empresa} />;
 
-  return <PainelDaEmpresa key={empresa.id} empresa={empresa} periodo={periodo} />;
+  return <PainelDaEmpresa key={empresa.id} empresa={empresa} visao={visao} />;
 }
 
-function PainelDaEmpresa({ empresa, periodo }: { empresa: Empresa; periodo: Periodo }) {
+function PainelDaEmpresa({ empresa, visao }: { empresa: Empresa; visao: VisaoGeral }) {
   const hoje = mesAtual();
+  const { periodo, inicio, seisMeses, maior, capitalDeGiro } = visao;
 
   // Mês do topo: o atual, ou o mais próximo dele que tenha vendas. As setas trocam.
   const [escolhido, escolher] = useState<Mes | null>(null);
-  const mes = limitar(escolhido ?? hoje, periodo.primeiro, periodo.ultimo);
+  const mes = limitar(escolhido ?? visao.mes, periodo.primeiro, periodo.ultimo);
   const resumo = resumoDoMes(empresa, mes);
   const deCadaCem = dividirValor(10_000, mes, empresa.regime).ficaComVoce;
   const nome = nomeDoMes(mes, { ano: false });
-
-  const inicio = inicioDaJanela(periodo, hoje, 6);
-  const seisMeses = projecao(empresa, inicio, 6);
-  const maior = mesDeMaiorRetencao(seisMeses);
 
   return (
     <>
@@ -127,7 +123,7 @@ function PainelDaEmpresa({ empresa, periodo }: { empresa: Empresa; periodo: Peri
               Capital de giro que some
             </h2>
             <p className="font-display text-[40px] leading-tight font-bold tracking-[-0.03em] tabular-nums">
-              {reais(capitalDeGiroMedio(seisMeses), { centavos: false })}
+              {reais(capitalDeGiro, { centavos: false })}
               <span className="text-xl font-semibold tracking-normal"> por mês</span>
             </p>
             <p className="text-[15px] leading-[1.55] text-texto-suave">

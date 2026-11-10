@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useDados } from "@/lib/armazenamento";
 import { SeloEmBreve } from "./SeloEmBreve";
 
 const itens = [
@@ -25,10 +26,13 @@ const inativo = `${base} text-nevoa hover:text-mineral-claro`;
 
 export function Menu() {
   const atual = usePathname();
+  // O contador ganha a lista de clientes como primeiro item.
+  const contador = useDados()?.perfil === "contador";
+  const visiveis = contador ? [{ href: "/contador/", rotulo: "Clientes" }, ...itens] : itens;
 
   return (
     <nav aria-label="Menu principal" className="flex flex-1 flex-wrap gap-1 max-sm:order-last max-sm:basis-full">
-      {itens.map(({ href, rotulo }) => {
+      {visiveis.map(({ href, rotulo }) => {
         const marcado = estaAtivo(atual, href);
         return (
           <Link

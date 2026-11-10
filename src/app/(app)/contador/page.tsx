@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
-import { EmConstrucao } from "@/components/EmConstrucao";
-import { TopoDaPagina } from "@/components/TopoDaPagina";
+import { Clientes } from "./Clientes";
 
 export const metadata: Metadata = { title: "Clientes" };
 
-export default function Contador() {
-  return (
-    <>
-      <TopoDaPagina titulo="Seus clientes" />
-      <EmConstrucao etapa={5} />
-    </>
-  );
+export default function PaginaClientes() {
+  return <Clientes />;
 }

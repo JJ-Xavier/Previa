@@ -108,10 +108,21 @@ describe("armazenamento", () => {
     expect(app.lerDados()).toEqual({ empresas: [], ativaId: null });
   });
 
-  it("apagar meus dados limpa o computador", async () => {
+  it("o perfil escolhido continua depois de salvar e remover empresas", async () => {
+    app.definirPerfil("contador");
+    app.salvarEmpresa(empresa("a", "Cliente A"));
+    app.salvarEmpresa(empresa("b", "Cliente B"));
+    app.removerEmpresa("a");
+    app.carregarExemplo();
+    const reaberto = await abrirApp();
+    expect(reaberto.lerDados().perfil).toBe("contador");
+  });
+
+  it("apagar meus dados limpa o computador, inclusive o perfil", async () => {
+    app.definirPerfil("contador");
     app.carregarExemplo();
     app.apagarTudo();
-    expect(app.lerDados().empresas).toHaveLength(0);
+    expect(app.lerDados()).toEqual({ empresas: [], ativaId: null });
     const reaberto = await abrirApp();
     expect(reaberto.lerDados().empresas).toHaveLength(0);
   });

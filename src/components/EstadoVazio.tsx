@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { carregarExemplo } from "@/lib/armazenamento";
+import { carregarExemplo, useDados } from "@/lib/armazenamento";
 import { TopoDaPagina } from "./TopoDaPagina";
 
 type Props = {
@@ -12,6 +12,15 @@ type Props = {
 
 // O que Painel e Projeção mostram enquanto não há nenhuma venda lançada.
 export function EstadoVazio({ titulo, temEmpresa }: Props) {
+  // O contador sem nenhum cliente começa cadastrando um.
+  const contador = useDados()?.perfil === "contador";
+  const contadorSemCliente = !temEmpresa && contador;
+  const acao = temEmpresa
+    ? { href: "/vendas/nova/", rotulo: "Lançar venda" }
+    : contadorSemCliente
+      ? { href: "/contador/novo/", rotulo: "Adicionar cliente" }
+      : { href: "/cadastro/", rotulo: "Lançar venda" };
+
   return (
     <>
       <TopoDaPagina
@@ -31,8 +40,8 @@ export function EstadoVazio({ titulo, temEmpresa }: Props) {
             antes, carregue uma empresa de exemplo com seis meses de vendas.
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-3">
-            <Link href={temEmpresa ? "/vendas/nova/" : "/cadastro/"} className="botao">
-              Lançar venda
+            <Link href={acao.href} className="botao">
+              {acao.rotulo}
             </Link>
             <button type="button" onClick={carregarExemplo} className="botao-contorno">
               Carregar exemplo

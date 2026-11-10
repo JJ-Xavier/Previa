@@ -30,13 +30,13 @@ npm run dev
 
 ## Onde fica cada coisa
 
-- `src/app/(app)/`: telas com o menu (Painel, Projeção, Vendas, Lançar venda, Dados da empresa, Transição, Em breve, Clientes)
-- `src/app/(acesso)/`: Entrar e Cadastro
+- `src/app/(app)/`: telas com o menu (Painel, Projeção, Vendas, Lançar venda, Dados da empresa, Transição, Em breve, Clientes e Novo cliente do contador)
+- `src/app/(acesso)/`: Entrar, Cadastro e a escolha de perfil (empresário ou contador)
 - `src/components/`: peças compartilhadas, como a `FaixaDividida` (verde e âmbar), o `EstadoVazio`, o `Campo` e a `Opcao` dos formulários e o `FormularioDaEmpresa` (cadastro e edição)
 - Classes do `globals.css`: `botao` (ação principal), `botao-contorno` (secundária), `botao-texto` (Voltar, Cancelar) e `campo` (caixa de texto)
 - `src/lib/`: o motor, sem tela
   - `armazenamento.ts`: único lugar que lê e grava os dados. As telas usam `useDados()` e as funções daqui, nunca o localStorage direto
-  - `calculo.ts`: retenção, resumo do mês, projeção, mês de maior retenção e capital de giro
+  - `calculo.ts`: retenção, resumo do mês, projeção, mês de maior retenção, capital de giro e a `visaoGeral` que o Painel e a lista de clientes usam
   - `aliquotas.ts`: alíquota por ano e regime (26,5% provisória)
   - `exemplo.ts`: a empresa de exemplo, com os mesmos números do canvas
   - `entrada.ts`: lê valor, data e CNPJ digitados e valida empresa e venda (formulário e planilha usam a mesma regra)

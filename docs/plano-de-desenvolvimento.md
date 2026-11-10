@@ -89,10 +89,10 @@ A tela principal mostrando os números da empresa.
 A contadora acompanha vários clientes no mesmo app. Essa tela ainda não está
 no canvas: seguir o mesmo padrão visual das outras.
 
-- [ ] No primeiro acesso, escolher o perfil: empresário ou contador.
-- [ ] Lista de clientes com o resumo de cada um: retido no mês e capital de giro.
-- [ ] Adicionar cliente, reaproveitando o cadastro da empresa.
-- [ ] Abrir um cliente: Painel, Projeção e Vendas passam a mostrar aquela empresa, com um seletor no topo para trocar.
+- [x] No primeiro acesso, escolher o perfil: empresário ou contador.
+- [x] Lista de clientes com o resumo de cada um: retido no mês e capital de giro.
+- [x] Adicionar cliente, reaproveitando o cadastro da empresa.
+- [x] Abrir um cliente: Painel, Projeção e Vendas passam a mostrar aquela empresa, com um seletor no topo para trocar.
 
 **Pronto quando:** o contador cadastra dois clientes, lança vendas em cada um e vê os números separados.
 

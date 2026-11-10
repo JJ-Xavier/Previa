@@ -64,6 +64,30 @@ export function totais(resumos: ResumoDoMes[]) {
   return { recebido, governo, ficaComVoce: recebido - governo };
 }
 
+/**
+ * O que o Painel e a lista de clientes mostram de uma empresa: o mês em
+ * destaque (o atual, ou o mais próximo com vendas), a janela de seis meses,
+ * o mês de maior retenção e o capital de giro. Sem vendas, undefined.
+ */
+export function visaoGeral(empresa: Empresa, mesAtual: Mes) {
+  const periodo = periodoComRecebimento(empresa);
+  if (!periodo) return undefined;
+  const mes = limitar(mesAtual, periodo.primeiro, periodo.ultimo);
+  const inicio = inicioDaJanela(periodo, mesAtual, 6);
+  const seisMeses = projecao(empresa, inicio, 6);
+  return {
+    periodo,
+    mes,
+    resumo: resumoDoMes(empresa, mes),
+    inicio,
+    seisMeses,
+    maior: mesDeMaiorRetencao(seisMeses),
+    capitalDeGiro: capitalDeGiroMedio(seisMeses),
+  };
+}
+
+export type VisaoGeral = NonNullable<ReturnType<typeof visaoGeral>>;
+
 /** O mês em que mais dinheiro fica retido. Em empate, o primeiro. Sem retenção, undefined. */
 export function mesDeMaiorRetencao(resumos: ResumoDoMes[]): ResumoDoMes | undefined {
   let maior: ResumoDoMes | undefined;

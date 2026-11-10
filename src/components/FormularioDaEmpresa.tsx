@@ -12,9 +12,13 @@ import { SeloEmBreve } from "./SeloEmBreve";
 type Props = {
   /** Sem empresa, cria uma nova e a abre. Com empresa, edita os dados dela. */
   existente?: Empresa;
+  /** Destino do "Voltar". Padrão: Vendas ao editar, Painel ao criar. */
+  voltarPara?: string;
+  /** Texto do botão. Padrão: "Salvar alterações" ao editar, "Continuar" ao criar. */
+  rotuloDoBotao?: string;
 };
 
-export function FormularioDaEmpresa({ existente }: Props) {
+export function FormularioDaEmpresa({ existente, voltarPara, rotuloDoBotao }: Props) {
   const router = useRouter();
   const [campos, setCampos] = useState<CamposDaEmpresa>({
     nome: existente?.nome ?? "",
@@ -145,11 +149,11 @@ export function FormularioDaEmpresa({ existente }: Props) {
       />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link href={existente ? "/vendas/" : "/"} className="botao-texto">
+        <Link href={voltarPara ?? (existente ? "/vendas/" : "/")} className="botao-texto">
           Voltar
         </Link>
         <button type="submit" className="botao px-8">
-          {existente ? "Salvar alterações" : "Continuar"}
+          {rotuloDoBotao ?? (existente ? "Salvar alterações" : "Continuar")}
         </button>
       </div>
     </form>

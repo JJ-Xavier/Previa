@@ -16,13 +16,11 @@ import {
   useDados,
 } from "@/lib/armazenamento";
 import { dividirVenda } from "@/lib/calculo";
-import { dataCurta, reais } from "@/lib/formatar";
+import { dataCurta, nomeDoRegime, reais } from "@/lib/formatar";
 import { lerPlanilha, modeloDaPlanilha, textoDoArquivo } from "@/lib/planilha";
 import type { Empresa } from "@/lib/tipos";
 
 type Aviso = { tipo: "ok" | "erro"; texto: string; linhas?: string[] };
-
-const NOME_DO_REGIME = { simples: "Simples Nacional", presumido: "Lucro Presumido" };
 
 // /vendas/?salva=<id> chega do formulário: mostra o aviso e destaca a venda salva.
 export function Vendas() {
@@ -257,7 +255,7 @@ function ListaDeVendas({ empresa, destaque, aoExcluir }: ListaProps) {
           Nenhuma venda lançada ainda. Lance a primeira ou envie uma planilha.
         </p>
       ) : (
-        <div role="region" aria-labelledby="ultimas-titulo" tabIndex={0} className="overflow-x-auto rounded-bloco bg-papel">
+        <div role="region" aria-labelledby="ultimas-titulo" tabIndex={0} className="relative overflow-x-auto rounded-bloco bg-papel">
           <table className="w-full min-w-[820px] border-collapse text-[15px] tabular-nums">
             <thead>
               <tr className="text-[13px] text-texto-suave">
@@ -345,11 +343,12 @@ function ListaDeVendas({ empresa, destaque, aoExcluir }: ListaProps) {
 }
 
 function SuaEmpresa({ empresa }: { empresa: Empresa }) {
+  const contador = useDados()?.perfil === "contador";
   const [confirmando, setConfirmando] = useState(false);
   const itens = [
     ["Nome", empresa.nome],
     ["CNPJ", empresa.cnpj],
-    ["Regime", NOME_DO_REGIME[empresa.regime]],
+    ["Regime", nomeDoRegime(empresa.regime)],
     ["Prazo médio", `${empresa.prazoMedioDias} dias`],
   ];
 
@@ -359,7 +358,7 @@ function SuaEmpresa({ empresa }: { empresa: Empresa }) {
       className="flex flex-col gap-5 rounded-cartao border-[1.5px] border-linha px-7 py-6"
     >
       <h2 id="empresa-titulo" className="font-display text-[22px] font-bold tracking-[-0.02em]">
-        Sua empresa
+        {contador ? "Dados do cliente" : "Sua empresa"}
       </h2>
       <dl className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-x-8 gap-y-4">
         {itens.map(([rotulo, valor]) => (
@@ -394,7 +393,18 @@ function SuaEmpresa({ empresa }: { empresa: Empresa }) {
           </button>
         </div>
       )}
-      <p className="text-[13px] text-texto-suave">Os dados ficam só neste computador. Nada é enviado pela internet.</p>
+      <p className="text-[13px] text-texto-suave">
+        Os dados ficam só neste computador. Nada é enviado pela internet.
+        {!contador && (
+          <>
+            {" "}
+            Acompanha várias empresas, como contador?{" "}
+            <Link href="/perfil/" className="font-semibold">
+              Trocar de perfil
+            </Link>
+          </>
+        )}
+      </p>
     </section>
   );
 }

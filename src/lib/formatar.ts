@@ -1,4 +1,4 @@
-import type { Centavos, DataISO, Mes } from "./tipos";
+import type { Centavos, DataISO, Mes, Regime } from "./tipos";
 
 const comCentavos = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const semCentavos = new Intl.NumberFormat("pt-BR", {
@@ -51,6 +51,13 @@ export function dataCurta(data: DataISO): string {
 export function intervaloDeMeses(inicio: Mes, fim: Mes): string {
   const mesmoAno = inicio.slice(0, 4) === fim.slice(0, 4);
   return comMaiuscula(`${nomeDoMes(inicio, { ano: !mesmoAno })} a ${nomeDoMes(fim)}`);
+}
+
+const REGIMES: Record<Regime, string> = { simples: "Simples Nacional", presumido: "Lucro Presumido" };
+
+/** "simples" vira "Simples Nacional". */
+export function nomeDoRegime(regime: Regime): string {
+  return REGIMES[regime];
 }
 
 export function comMaiuscula(texto: string): string {

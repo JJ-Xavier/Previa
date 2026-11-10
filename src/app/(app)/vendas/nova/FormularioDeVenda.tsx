@@ -11,10 +11,8 @@ import { empresaAtiva, novoId, salvarVenda, useDados } from "@/lib/armazenamento
 import { dividirValor } from "@/lib/calculo";
 import { mesAtual, mesDe, somarDias } from "@/lib/datas";
 import { lerData, lerValor, validarVenda, type CamposDaVenda } from "@/lib/entrada";
-import { dataCurta, reais, valorParaCampo } from "@/lib/formatar";
+import { dataCurta, nomeDoRegime, reais, valorParaCampo } from "@/lib/formatar";
 import type { Empresa, Venda } from "@/lib/tipos";
-
-const NOME_DO_REGIME = { simples: "Simples Nacional", presumido: "Lucro Presumido" };
 
 // /vendas/nova/ lança uma venda; /vendas/nova/?editar=<id> edita uma que já existe.
 export function NovaVenda() {
@@ -239,7 +237,7 @@ function PreviaDaVenda({ valor, recebimento, empresa }: PreviaProps) {
         </p>
       )}
       <p className="text-[13px] leading-normal text-nevoa">
-        Estimativa feita com a alíquota de referência do {NOME_DO_REGIME[empresa.regime]}.
+        Estimativa feita com a alíquota de referência do {nomeDoRegime(empresa.regime)}.
       </p>
     </aside>
   );
