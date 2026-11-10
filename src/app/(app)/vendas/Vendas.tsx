@@ -183,9 +183,9 @@ function CartaoPequeno({ titulo, texto, children }: { titulo: string; texto: str
 }
 
 const conexoes = [
-  ["Notas fiscais (NF-e)", "Direto da SEFAZ ou pelo arquivo XML"],
-  ["Banco (Open Finance)", "Recebimentos da conta da empresa, com sua autorização"],
-  ["Sistema de gestão (ERP)", "As vendas do sistema que você já usa"],
+  ["Notas fiscais (NF-e)", "Direto da SEFAZ ou pelo arquivo XML", "/em-breve/nfe/"],
+  ["Banco (Open Finance)", "Recebimentos da conta da empresa, com sua autorização", "/em-breve/banco/"],
+  ["Sistema de gestão (ERP)", "As vendas do sistema que você já usa", "/em-breve/erp/"],
 ];
 
 function Conexoes() {
@@ -201,7 +201,7 @@ function Conexoes() {
         <SeloEmBreve />
       </div>
       <p className="mb-1.5 text-[15px] text-texto-suave">Em breve seus dados vão entrar sozinhos, sem digitar nada.</p>
-      {conexoes.map(([nome, detalhe]) => (
+      {conexoes.map(([nome, detalhe, href]) => (
         <div
           key={nome}
           className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-linha py-3.5 last:pb-1"
@@ -210,7 +210,11 @@ function Conexoes() {
             <span className="text-base font-semibold">{nome}</span>
             <span className="text-sm text-texto-suave">{detalhe}</span>
           </div>
-          <Link href="/em-breve/" className="inline-flex min-h-11 items-center text-[15px] font-semibold">
+          <Link
+            href={href}
+            aria-label={`Quero ser avisado: ${nome}`}
+            className="inline-flex min-h-11 items-center text-[15px] font-semibold"
+          >
             Quero ser avisado
           </Link>
         </div>

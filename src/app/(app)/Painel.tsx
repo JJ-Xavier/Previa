@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
+import { AvisoDeEstimativa } from "@/components/AvisoDeEstimativa";
 import { EstadoVazio } from "@/components/EstadoVazio";
 import { FaixaDividida } from "@/components/FaixaDividida";
 import { SeloEmBreve } from "@/components/SeloEmBreve";
@@ -132,6 +133,7 @@ function PainelDaEmpresa({ empresa, visao }: { empresa: Empresa; visao: VisaoGer
           </section>
           <OQueFazer />
         </aside>
+        <AvisoDeEstimativa regime={empresa.regime} className="-mt-6 basis-full" />
       </main>
     </>
   );
@@ -223,7 +225,7 @@ function OQueFazer() {
         }
       >
         A Prévia vai mostrar opções de crédito para os meses mais apertados.{" "}
-        <Link href="/em-breve/" className="font-semibold">
+        <Link href="/em-breve/credito/" className="font-semibold">
           Quero ser avisado
         </Link>
       </Acao>

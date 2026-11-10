@@ -17,6 +17,7 @@ async function abrirJanela() {
     minWidth: 400,
     minHeight: 600,
     title: "Prévia",
+    icon: path.join(raiz, "electron", "icone.png"),
     backgroundColor: "#EEF2F0",
     autoHideMenuBar: true,
   });

@@ -98,20 +98,20 @@ no canvas: seguir o mesmo padrão visual das outras.
 
 ## Etapa 6 · Telas restantes e acabamento
 
-- [ ] Entrar: acesso local simples, que cria ou abre o perfil salvo no computador. Senha de verdade só quando houver servidor.
-- [ ] Transição 2026–2033, com conteúdo fixo.
-- [ ] Tela modelo "em breve" para NF-e, banco, ERP e crédito. O "Quero ser avisado" guarda o e-mail no localStorage.
-- [ ] Mensagens de erro e estados vazios nas telas de entrada de dados.
-- [ ] Aviso "estimativa para planejamento" nas telas com números.
+- [x] Entrar: acesso local simples, que cria ou abre o perfil salvo no computador. Senha de verdade só quando houver servidor.
+- [x] Transição 2026–2033, com conteúdo fixo.
+- [x] Tela modelo "em breve" para NF-e, banco, ERP e crédito. O "Quero ser avisado" guarda o e-mail no localStorage.
+- [x] Mensagens de erro e estados vazios nas telas de entrada de dados.
+- [x] Aviso "estimativa para planejamento" nas telas com números.
 
 **Pronto quando:** todas as telas do canvas funcionam e nenhum botão fica sem destino.
 
 ## Etapa 7 · Instalador e apresentação
 
-- [ ] Gerar o instalador para Windows com `electron-builder`.
+- [x] Gerar o instalador para Windows com `electron-builder`.
 - [ ] Instalar num computador que nunca teve o projeto e testar sem internet.
-- [ ] Escrever o README: como rodar em desenvolvimento e como gerar o instalador.
-- [ ] Montar o roteiro da demonstração: cadastro, dados de exemplo, painel, lançar venda, projeção, painel do contador e uma tela "em breve".
+- [x] Escrever o README: como rodar em desenvolvimento e como gerar o instalador.
+- [x] Montar o roteiro da demonstração: cadastro, dados de exemplo, painel, lançar venda, projeção, painel do contador e uma tela "em breve". Está em [roteiro-da-demonstracao.md](roteiro-da-demonstracao.md).
 
 **Pronto quando:** o instalador funciona numa máquina limpa e a demonstração roda do início ao fim.
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cnpjValido, formatarCnpj, lerData, lerValor, validarEmpresa, validarVenda } from "./entrada";
+import { cnpjValido, formatarCnpj, lerData, lerValor, validarEmail, validarEmpresa, validarVenda } from "./entrada";
 import { lerPlanilha, modeloDaPlanilha, textoDoArquivo } from "./planilha";
 
 describe("lerValor", () => {
@@ -162,5 +162,17 @@ describe("planilha", () => {
     const bytes = new Uint8Array([0x45, 0x73, 0x63, 0x72, 0x69, 0x74, 0xf3, 0x72, 0x69, 0x6f]); // "Escritório"
     expect(textoDoArquivo(bytes.buffer)).toBe("Escritório");
     expect(textoDoArquivo(new TextEncoder().encode("Escritório").buffer)).toBe("Escritório");
+  });
+});
+
+describe("validarEmail", () => {
+  it("tira espaços e passa para minúsculas", () => {
+    expect(validarEmail("  Ana@Padaria.com.BR ")).toEqual({ email: "ana@padaria.com.br" });
+  });
+
+  it("recusa vazio e e-mail incompleto", () => {
+    expect(validarEmail(" ").erro).toBe("Falta o e-mail.");
+    expect(validarEmail("ana@padaria").erro).toBeDefined();
+    expect(validarEmail("ana padaria@x.com").erro).toBeDefined();
   });
 });

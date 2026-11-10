@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import { AvisoDeEstimativa } from "@/components/AvisoDeEstimativa";
 import { EstadoVazio } from "@/components/EstadoVazio";
 import { SeloEmBreve } from "@/components/SeloEmBreve";
 import { empresaAtiva, useDados } from "@/lib/armazenamento";
@@ -140,9 +141,7 @@ export function Projecao() {
               </tfoot>
             </table>
           </div>
-          <p className="text-[13px] leading-normal text-texto-suave">
-            Estimativa feita com a alíquota de referência do seu regime.
-          </p>
+          <AvisoDeEstimativa regime={empresa.regime} />
         </section>
       </main>
     </>

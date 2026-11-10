@@ -17,7 +17,17 @@ export type Dados = {
   ativaId: string | null;
   /** Escolhido no primeiro acesso. Dados antigos, sem perfil, contam como empresário. */
   perfil?: Perfil;
+  /** Criado na tela Entrar. Sem acesso aberto, as telas do app levam para lá. */
+  acesso?: Acesso;
+  /** "Quero ser avisado": o e-mail deixado em cada recurso que ainda não existe. */
+  avisos?: Record<string, string>;
 };
+
+/**
+ * Acesso local, guardado só neste computador: o e-mail e se a pessoa está
+ * dentro. Senha de verdade só quando houver servidor.
+ */
+export type Acesso = { email: string; aberto: boolean };
 
 const CHAVE = "previa:dados";
 const VAZIO: Dados = { empresas: [], ativaId: null };
@@ -73,6 +83,29 @@ export function empresaAtiva(dados: Dados): Empresa | null {
 
 export function definirPerfil(perfil: Perfil) {
   gravar({ ...ler(), perfil });
+}
+
+/**
+ * Entrar com o e-mail já validado. No primeiro acesso, cria o acesso com ele.
+ * Depois, só abre com o mesmo e-mail: devolve false se for outro.
+ */
+export function entrar(email: string): boolean {
+  const dados = ler();
+  if (dados.acesso && dados.acesso.email !== email) return false;
+  gravar({ ...dados, acesso: { email, aberto: true } });
+  return true;
+}
+
+/** Fecha o acesso sem apagar nada. O e-mail continua salvo para entrar de novo. */
+export function sair() {
+  const dados = ler();
+  if (dados.acesso) gravar({ ...dados, acesso: { ...dados.acesso, aberto: false } });
+}
+
+/** Guarda o e-mail na lista de espera de um recurso "em breve". */
+export function pedirAviso(recurso: string, email: string) {
+  const dados = ler();
+  gravar({ ...dados, avisos: { ...dados.avisos, [recurso]: email } });
 }
 
 export function novoId(): string {
@@ -145,7 +178,7 @@ export function carregarExemplo() {
   abrirEmpresa(exemplo.id);
 }
 
-/** "Apagar meus dados": remove tudo o que a Prévia guardou neste computador. */
+/** "Apagar meus dados": remove tudo o que a Prévia guardou neste computador, até o acesso. */
 export function apagarTudo() {
   cache = VAZIO;
   localStorage.removeItem(CHAVE);

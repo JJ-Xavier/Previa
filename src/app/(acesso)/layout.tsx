@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Marca } from "@/components/Marca";
 import { PassosDoCadastro } from "./PassosDoCadastro";
 
-// Entrar e cadastro: antes de entrar no app, sem o menu.
+// Escolha de perfil e cadastro: depois de entrar, antes das telas do app. Sem o menu.
 export default function LayoutAcesso({ children }: { children: ReactNode }) {
   return (
     <>

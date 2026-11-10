@@ -2,19 +2,31 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
 import { useDados } from "@/lib/armazenamento";
 import { SeloEmBreve } from "./SeloEmBreve";
 
-const itens = [
+type Item = { href: string; rotulo: ReactNode; /** Outras telas em que o item fica marcado. */ tambem?: string[] };
+
+const itens: Item[] = [
   { href: "/", rotulo: "Painel" },
   { href: "/projecao/", rotulo: "Projeção" },
-  { href: "/vendas/", rotulo: "Vendas" },
+  // As conexões "em breve" saem da tela de Vendas.
+  { href: "/vendas/", rotulo: "Vendas", tambem: ["/empresa/", "/em-breve/nfe/", "/em-breve/banco/", "/em-breve/erp/"] },
   { href: "/transicao/", rotulo: "Transição" },
+  {
+    href: "/em-breve/credito/",
+    rotulo: (
+      <>
+        Crédito <SeloEmBreve naFaixa />
+      </>
+    ),
+  },
 ];
 
 const semBarraFinal = (caminho: string) => caminho.replace(/\/+$/, "") || "/";
 
-function estaAtivo(atual: string, href: string) {
+function estaEm(atual: string, href: string) {
   const a = semBarraFinal(atual);
   const h = semBarraFinal(href);
   return h === "/" ? a === "/" : a === h || a.startsWith(`${h}/`);
@@ -32,8 +44,8 @@ export function Menu() {
 
   return (
     <nav aria-label="Menu principal" className="flex flex-1 flex-wrap gap-1 max-sm:order-last max-sm:basis-full">
-      {visiveis.map(({ href, rotulo }) => {
-        const marcado = estaAtivo(atual, href);
+      {visiveis.map(({ href, rotulo, tambem = [] }: Item) => {
+        const marcado = [href, ...tambem].some((h) => estaEm(atual, h));
         return (
           <Link
             key={href}
@@ -45,13 +57,6 @@ export function Menu() {
           </Link>
         );
       })}
-      <Link
-        href="/em-breve/"
-        aria-current={estaAtivo(atual, "/em-breve/") ? "page" : undefined}
-        className={estaAtivo(atual, "/em-breve/") ? ativo : inativo}
-      >
-        Crédito <SeloEmBreve naFaixa />
-      </Link>
     </nav>
   );
 }

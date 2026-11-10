@@ -1,0 +1,36 @@
+# Instalador para Windows: npm run instalador gera dist/Previa-Setup-<versão>.exe
+appId: br.com.previa.app
+productName: Prévia
+# Nome do .exe sem acento, para não ter problema em nenhum Windows.
+executableName: Previa
+copyright: Equipe Prévia
+
+directories:
+  output: dist
+
+# Sem atualização automática: cada versão é um instalador novo.
+publish: null
+
+# O app instalado só precisa da janela (electron/) e do export estático (out/).
+# Next e React ficam em devDependencies: o export já traz tudo o que a tela usa.
+files:
+  - electron/main.mjs
+  - electron/icone.png
+  - out/**/*
+  - package.json
+
+win:
+  target: nsis
+  icon: electron/icone.png
+
+nsis:
+  # Instala com um clique, só para o usuário, sem pedir senha de administrador.
+  oneClick: true
+  perMachine: false
+  shortcutName: Prévia
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  runAfterFinish: true
+  artifactName: Previa-Setup-${version}.${ext}
+  # Desinstalar também apaga os dados salvos no computador.
+  deleteAppDataOnUninstall: true

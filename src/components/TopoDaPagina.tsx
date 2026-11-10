@@ -6,12 +6,14 @@ type Props = {
   descricao?: string;
   /** Link acima do título para a tela de onde a pessoa veio. */
   voltar?: { href: string; rotulo: string };
+  /** Marca acima do título, como o "Em breve". */
+  selo?: ReactNode;
   /** Conteúdo extra dentro da faixa, abaixo do título. */
   children?: ReactNode;
 };
 
 // Continuação da faixa petróleo abaixo do menu, com o título da tela.
-export function TopoDaPagina({ titulo, descricao, voltar, children }: Props) {
+export function TopoDaPagina({ titulo, descricao, voltar, selo, children }: Props) {
   return (
     <div className="faixa bg-petroleo text-mineral-claro">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-2.5 px-4 pt-8 pb-11 sm:px-10">
@@ -26,6 +28,7 @@ export function TopoDaPagina({ titulo, descricao, voltar, children }: Props) {
             {voltar.rotulo}
           </Link>
         )}
+        {selo}
         <h1 className="font-display text-[clamp(32px,4vw,48px)] leading-[1.05] font-bold tracking-[-0.035em]">
           {titulo}
         </h1>

@@ -36,6 +36,9 @@
   --color-ambar-texto: #8a4f05;
   --color-ambar-claro: #f6d29c;
   --color-ambar-fundo: #fdf1de;
+  /* Texto e borda de campo sobre o âmbar-fundo, como no "Quero ser avisado". */
+  --color-ambar-tinta: #5a4520;
+  --color-ambar-borda: #e2c391;
 
   /* Erro de preenchimento. Não usa âmbar, que já significa "governo". */
   --color-erro: #b42318;

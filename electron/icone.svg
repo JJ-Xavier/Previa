@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Ícone do app: os dois blocos da marca, a venda dividida (verde fica com você, âmbar vai para o governo). -->
+  <rect width="512" height="512" rx="112" fill="#0F2A2E"/>
+  <rect x="118" y="151" width="171" height="210" rx="46" fill="#17786C"/>
+  <rect x="317" y="151" width="77" height="210" rx="46" fill="#F0A33A"/>
+</svg>

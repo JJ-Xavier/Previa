@@ -10,16 +10,16 @@ export function EmpresaAtual() {
   if (!dados || !empresa) return null;
 
   if (dados.empresas.length === 1) {
-    return <span className="ml-auto text-sm text-nevoa">{empresa.nome}</span>;
+    return <span className="truncate text-sm text-nevoa">{empresa.nome}</span>;
   }
 
   return (
-    <label className="relative ml-auto">
+    <label className="relative min-w-0">
       <span className="sr-only">{dados.perfil === "contador" ? "Cliente aberto" : "Empresa aberta"}</span>
       <select
         value={empresa.id}
         onChange={(e) => abrirEmpresa(e.target.value)}
-        className="min-h-10 max-w-64 cursor-pointer appearance-none truncate rounded-full bg-petroleo-medio pr-9 pl-4 text-sm text-mineral-claro hover:bg-petroleo-claro"
+        className="min-h-10 w-full max-w-64 cursor-pointer appearance-none truncate rounded-full bg-petroleo-medio pr-9 pl-4 text-sm text-mineral-claro hover:bg-petroleo-claro"
       >
         {dados.empresas.map((e) => (
           <option key={e.id} value={e.id}>

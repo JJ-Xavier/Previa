@@ -149,3 +149,13 @@ export function validarEmpresa(campos: CamposDaEmpresa) {
   };
   return { erros, dados };
 }
+
+/** E-mail sem espaços e em minúsculas, para comparar "Ana@x.com" com "ana@x.com". */
+export function validarEmail(texto: string): { erro?: string; email?: string } {
+  const email = texto.trim().toLowerCase();
+  if (!email) return { erro: "Falta o e-mail." };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { erro: "Escreva o e-mail completo, como voce@suaempresa.com.br." };
+  }
+  return { email };
+}

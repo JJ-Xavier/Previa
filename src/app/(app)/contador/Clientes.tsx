@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { AvisoDeEstimativa } from "@/components/AvisoDeEstimativa";
 import { TopoDaPagina } from "@/components/TopoDaPagina";
 import { abrirEmpresa, carregarExemplo, removerEmpresa, useDados } from "@/lib/armazenamento";
 import { visaoGeral } from "@/lib/calculo";
@@ -187,11 +188,13 @@ export function Clientes() {
                 </tbody>
               </table>
             </div>
-            <p className="max-w-[46rem] text-[13px] leading-normal text-texto-suave">
-              Retido no mês é o que vai para o governo no mês que o Painel do cliente mostra. Capital de giro é a
-              média de imposto por mês nos seis meses do Painel. Estimativa feita com a alíquota de referência de
-              cada regime.
-            </p>
+            <div className="flex max-w-[46rem] flex-col gap-1">
+              <p className="text-[13px] leading-normal text-texto-suave">
+                Retido no mês é o que vai para o governo no mês que o Painel do cliente mostra. Capital de giro é a
+                média de imposto por mês nos seis meses do Painel.
+              </p>
+              <AvisoDeEstimativa />
+            </div>
           </>
         )}
 

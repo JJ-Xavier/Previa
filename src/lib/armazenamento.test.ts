@@ -127,6 +127,36 @@ describe("armazenamento", () => {
     expect(reaberto.lerDados().empresas).toHaveLength(0);
   });
 
+  it("entrar cria o acesso no primeiro uso e depois só abre com o mesmo e-mail", async () => {
+    expect(app.entrar("ana@padaria.com.br")).toBe(true);
+    app.sair();
+    expect(app.lerDados().acesso).toEqual({ email: "ana@padaria.com.br", aberto: false });
+    expect(app.entrar("outro@padaria.com.br")).toBe(false);
+    expect(app.lerDados().acesso?.aberto).toBe(false);
+    expect(app.entrar("ana@padaria.com.br")).toBe(true);
+    const reaberto = await abrirApp();
+    expect(reaberto.lerDados().acesso).toEqual({ email: "ana@padaria.com.br", aberto: true });
+  });
+
+  it("sair e pedir aviso não mexem nas empresas", () => {
+    app.carregarExemplo();
+    app.entrar("ana@padaria.com.br");
+    app.pedirAviso("nfe", "ana@padaria.com.br");
+    app.pedirAviso("credito", "financeiro@padaria.com.br");
+    app.sair();
+    const dados = app.lerDados();
+    expect(dados.empresas).toHaveLength(1);
+    expect(dados.avisos).toEqual({ nfe: "ana@padaria.com.br", credito: "financeiro@padaria.com.br" });
+  });
+
+  it("apagar meus dados também apaga o acesso e os avisos", () => {
+    app.entrar("ana@padaria.com.br");
+    app.pedirAviso("nfe", "ana@padaria.com.br");
+    app.apagarTudo();
+    expect(app.lerDados().acesso).toBeUndefined();
+    expect(app.entrar("outro@padaria.com.br")).toBe(true);
+  });
+
   it("dado estragado no computador é tratado como vazio", async () => {
     localStorage.setItem("previa:dados", "{isso não é json");
     const reaberto = await abrirApp();

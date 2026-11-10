@@ -1,6 +1,9 @@
 {
   "name": "previa",
+  "productName": "Prévia",
   "version": "0.1.0",
+  "description": "Simulador do impacto do split payment no caixa de pequenas empresas",
+  "author": "Equipe Prévia",
   "private": true,
   "main": "electron/main.mjs",
   "scripts": {
@@ -9,13 +12,11 @@
     "build": "next build",
     "start": "next build && electron . --prod",
     "lint": "eslint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "instalador": "next build && electron-builder --win"
   },
   "dependencies": {
-    "electron-serve": "^3.0.1",
-    "next": "16.4.5",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "electron-serve": "^3.0.1"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",
@@ -24,8 +25,12 @@
     "@types/react-dom": "^19",
     "concurrently": "^10.0.7",
     "electron": "^45.2.3",
+    "electron-builder": "^26.18.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "next": "16.4.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vitest": "^5.1.0",

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Campo, Opcao } from "@/components/Campo";
+import { AvisoDeEstimativa } from "@/components/AvisoDeEstimativa";
 import { EstadoVazio } from "@/components/EstadoVazio";
 import { FaixaDividida } from "@/components/FaixaDividida";
 import { TopoDaPagina } from "@/components/TopoDaPagina";
@@ -11,7 +12,7 @@ import { empresaAtiva, novoId, salvarVenda, useDados } from "@/lib/armazenamento
 import { dividirValor } from "@/lib/calculo";
 import { mesAtual, mesDe, somarDias } from "@/lib/datas";
 import { lerData, lerValor, validarVenda, type CamposDaVenda } from "@/lib/entrada";
-import { dataCurta, nomeDoRegime, reais, valorParaCampo } from "@/lib/formatar";
+import { dataCurta, reais, valorParaCampo } from "@/lib/formatar";
 import type { Empresa, Venda } from "@/lib/tipos";
 
 // /vendas/nova/ lança uma venda; /vendas/nova/?editar=<id> edita uma que já existe.
@@ -236,9 +237,7 @@ function PreviaDaVenda({ valor, recebimento, empresa }: PreviaProps) {
           Digite o valor da venda para ver quanto fica com você e quanto vai para o governo.
         </p>
       )}
-      <p className="text-[13px] leading-normal text-nevoa">
-        Estimativa feita com a alíquota de referência do {nomeDoRegime(empresa.regime)}.
-      </p>
+      <AvisoDeEstimativa regime={empresa.regime} naFaixa />
     </aside>
   );
 }
