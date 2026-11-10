@@ -27,7 +27,7 @@ export function Menu() {
   const atual = usePathname();
 
   return (
-    <nav aria-label="Menu principal" className="flex flex-1 flex-wrap gap-1">
+    <nav aria-label="Menu principal" className="flex flex-1 flex-wrap gap-1 max-sm:order-last max-sm:basis-full">
       {itens.map(({ href, rotulo }) => {
         const marcado = estaAtivo(atual, href);
         return (

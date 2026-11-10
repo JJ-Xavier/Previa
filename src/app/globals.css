@@ -70,3 +70,47 @@
     outline-color: var(--color-ambar);
   }
 }
+
+/* Botões do canvas. Servem para <a> e <button>. */
+@layer components {
+  .botao,
+  .botao-contorno {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border-radius: 999px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  /* Ação principal da tela: "Lançar venda", "Salvar venda", "Continuar". */
+  .botao {
+    min-height: 52px;
+    padding: 0 28px;
+    background: var(--color-petroleo);
+    color: var(--color-papel);
+    font-size: 16px;
+  }
+
+  .botao:hover {
+    background: var(--color-petroleo-medio);
+    color: var(--color-papel);
+  }
+
+  /* Ação secundária: "Carregar exemplo", "Baixar modelo". */
+  .botao-contorno {
+    min-height: 44px;
+    padding: 0 16px;
+    border: 1.5px solid var(--color-petroleo);
+    background: transparent;
+    color: var(--color-petroleo);
+    font-size: 14px;
+  }
+
+  .botao-contorno:hover {
+    background: var(--color-papel);
+    color: var(--color-petroleo);
+  }
+}

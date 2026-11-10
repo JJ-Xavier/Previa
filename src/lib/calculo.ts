@@ -1,15 +1,39 @@
 import { aliquota } from "./aliquotas";
-import { mesDe, somarMeses } from "./datas";
+import { limitar, mesDe, somarMeses } from "./datas";
 import type { Centavos, Empresa, Mes, Regime, ResumoDoMes, Venda } from "./tipos";
+
+/** Divide um valor recebido no `mes` entre o governo e a empresa. */
+export function dividirValor(valor: Centavos, mes: Mes, regime: Regime) {
+  const governo = Math.round(valor * aliquota(Number(mes.slice(0, 4)), regime));
+  return { governo, ficaComVoce: valor - governo };
+}
 
 /**
  * Divide uma venda entre o governo e a empresa. O imposto é retido no dia do
  * recebimento, então vale a alíquota do ano em que o dinheiro cai na conta.
  */
 export function dividirVenda(venda: Venda, regime: Regime) {
-  const ano = Number(venda.dataRecebimento.slice(0, 4));
-  const governo = Math.round(venda.valor * aliquota(ano, regime));
-  return { governo, ficaComVoce: venda.valor - governo };
+  return dividirValor(venda.valor, mesDe(venda.dataRecebimento), regime);
+}
+
+/** Primeiro e último mês em que entra dinheiro. Sem vendas, undefined. */
+export function periodoComRecebimento(empresa: Empresa) {
+  const meses = empresa.vendas.map((v) => mesDe(v.dataRecebimento)).sort();
+  if (meses.length === 0) return undefined;
+  return { primeiro: meses[0], ultimo: meses[meses.length - 1] };
+}
+
+export type Periodo = NonNullable<ReturnType<typeof periodoComRecebimento>>;
+
+/**
+ * Primeiro mês da janela de `meses` meses do Painel e da Projeção. Começa no
+ * mês atual, mas nunca antes do primeiro recebimento. Se as vendas acabam
+ * antes do fim da janela, ela volta no tempo para não sobrar mês vazio.
+ */
+export function inicioDaJanela(periodo: Periodo, mesAtual: Mes, meses: number): Mes {
+  const ultimoInicio = somarMeses(periodo.ultimo, -(meses - 1));
+  const limite = ultimoInicio > periodo.primeiro ? ultimoInicio : periodo.primeiro;
+  return limitar(mesAtual, periodo.primeiro, limite);
 }
 
 /** Soma as vendas recebidas no mês. */

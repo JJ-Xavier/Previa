@@ -66,11 +66,11 @@ O motor da Prévia, ainda sem tela.
 
 A tela principal mostrando os números da empresa.
 
-- [ ] Componente da faixa dividida ("fica com você" e "vai para o governo"), usado em várias telas.
-- [ ] Painel: faixa do mês atual, gráfico dos 6 meses com destaque no mês de maior retenção, capital de giro e "O que dá para fazer agora".
-- [ ] Projeção: comparação "hoje e com o split payment" e tabela mês a mês com total.
-- [ ] Botões de período: 6 e 12 meses funcionando. "Até 2033" fica com selo "em breve".
-- [ ] Estado vazio: sem vendas, o painel convida a lançar a primeira venda ou carregar o exemplo.
+- [x] Componente da faixa dividida ("fica com você" e "vai para o governo"), usado em várias telas.
+- [x] Painel: faixa do mês atual, gráfico dos 6 meses com destaque no mês de maior retenção, capital de giro e "O que dá para fazer agora".
+- [x] Projeção: comparação "hoje e com o split payment" e tabela mês a mês com total.
+- [x] Botões de período: 6 e 12 meses funcionando. "Até 2033" fica com selo "em breve".
+- [x] Estado vazio: sem vendas, o painel convida a lançar a primeira venda ou carregar o exemplo.
 
 **Pronto quando:** depois de carregar os dados de exemplo, Painel e Projeção ficam iguais ao canvas.
 

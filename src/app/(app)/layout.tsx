@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { EmpresaAtual } from "@/components/EmpresaAtual";
 import { Marca } from "@/components/Marca";
 import { Menu } from "@/components/Menu";
 
@@ -13,6 +14,7 @@ export default function LayoutApp({ children }: { children: ReactNode }) {
             <Marca />
           </Link>
           <Menu />
+          <EmpresaAtual />
         </header>
       </div>
       {children}

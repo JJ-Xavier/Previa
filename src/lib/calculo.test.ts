@@ -2,15 +2,18 @@ import { describe, expect, it } from "vitest";
 import { aliquota } from "./aliquotas";
 import {
   capitalDeGiroMedio,
+  dividirValor,
   dividirVenda,
+  inicioDaJanela,
   mesDeMaiorRetencao,
+  periodoComRecebimento,
   projecao,
   resumoDoMes,
   totais,
 } from "./calculo";
 import { somarDias, somarMeses } from "./datas";
 import { criarEmpresaExemplo } from "./exemplo";
-import { nomeDoMes, reais } from "./formatar";
+import { intervaloDeMeses, mesCurto, nomeDoMes, reais, reaisCompacto } from "./formatar";
 import type { Venda } from "./tipos";
 
 const exemplo = criarEmpresaExemplo();
@@ -89,10 +92,38 @@ describe("com os dados de exemplo", () => {
   });
 });
 
+describe("janela do Painel e da Projeção", () => {
+  const periodo = periodoComRecebimento(exemplo)!;
+
+  it("o exemplo recebe de janeiro a junho de 2027", () => {
+    expect(periodo).toEqual({ primeiro: "2027-01", ultimo: "2027-06" });
+  });
+
+  it("antes das vendas, a janela começa no primeiro recebimento", () => {
+    expect(inicioDaJanela(periodo, "2026-11", 6)).toBe("2027-01");
+    expect(inicioDaJanela(periodo, "2026-11", 12)).toBe("2027-01");
+  });
+
+  it("no meio das vendas, a janela começa no mês atual", () => {
+    const longo = { primeiro: "2027-01", ultimo: "2027-12" };
+    expect(inicioDaJanela(longo, "2027-04", 6)).toBe("2027-04");
+  });
+
+  it("perto do fim das vendas, a janela volta para não sobrar mês vazio", () => {
+    expect(inicioDaJanela(periodo, "2027-05", 6)).toBe("2027-01");
+    expect(inicioDaJanela({ primeiro: "2026-01", ultimo: "2026-06" }, "2026-11", 6)).toBe("2026-01");
+  });
+
+  it("dividirValor dá os R$ 73,50 de cada R$ 100", () => {
+    expect(dividirValor(10_000, "2027-03", "simples")).toEqual({ governo: 2_650, ficaComVoce: 7_350 });
+  });
+});
+
 describe("sem vendas", () => {
   const vazia = { ...exemplo, vendas: [] };
 
-  it("não tem mês de maior retenção nem capital de giro", () => {
+  it("não tem período, mês de maior retenção nem capital de giro", () => {
+    expect(periodoComRecebimento(vazia)).toBeUndefined();
     const resumos = projecao(vazia, "2027-01", 6);
     expect(mesDeMaiorRetencao(resumos)).toBeUndefined();
     expect(capitalDeGiroMedio(resumos)).toBe(0);
@@ -136,5 +167,17 @@ describe("formatar", () => {
 
   it("escreve o mês por extenso", () => {
     expect(nomeDoMes("2027-03")).toBe("março de 2027");
+    expect(nomeDoMes("2027-03", { ano: false })).toBe("março");
+    expect(mesCurto("2027-03")).toBe("mar");
+  });
+
+  it("escreve o intervalo da projeção", () => {
+    expect(intervaloDeMeses("2027-01", "2027-06")).toBe("Janeiro a junho de 2027");
+    expect(intervaloDeMeses("2027-07", "2028-06")).toBe("Julho de 2027 a junho de 2028");
+  });
+
+  it("encurta valores para o gráfico", () => {
+    expect(texto(reaisCompacto(3_234_000))).toBe("32,3 mil");
+    expect(texto(reaisCompacto(3_528_000))).toBe("35,3 mil");
   });
 });

@@ -32,7 +32,8 @@ npm run dev
 
 - `src/app/(app)/`: telas com o menu (Painel, Projeção, Vendas, Transição, Em breve, Clientes)
 - `src/app/(acesso)/`: Entrar e Cadastro
-- `src/components/`: peças compartilhadas
+- `src/components/`: peças compartilhadas, como a `FaixaDividida` (verde e âmbar) e o `EstadoVazio`
+- Botões: use as classes `botao` (ação principal) e `botao-contorno` (secundária), definidas no `globals.css`
 - `src/lib/`: o motor, sem tela
   - `armazenamento.ts`: único lugar que lê e grava os dados. As telas usam `useDados()` e as funções daqui, nunca o localStorage direto
   - `calculo.ts`: retenção, resumo do mês, projeção, mês de maior retenção e capital de giro
