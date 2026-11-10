@@ -33,10 +33,11 @@ const tamanhos = {
 const valor = "font-display font-bold tracking-[-0.03em] whitespace-nowrap tabular-nums";
 
 // A assinatura visual da Prévia: o que fica com você (verde) ao lado do que
-// vai para o governo (âmbar), cada parte com a largura do seu valor.
+// vai para o governo (âmbar), cada parte com a largura do seu valor. Como o
+// valor não quebra linha, em espaço estreito o bloco nunca fica menor que ele.
 export function FaixaDividida({ ficaComVoce, governo, descricao, tamanho = "grande", className = "" }: Props) {
   const t = tamanhos[tamanho];
-  const bloco = `flex min-w-0 flex-col justify-between ${t.bloco}`;
+  const bloco = `flex flex-col justify-between ${t.bloco}`;
 
   return (
     <div role="img" aria-label={descricao} className={`flex ${t.faixa} ${className}`}>
@@ -44,8 +45,7 @@ export function FaixaDividida({ ficaComVoce, governo, descricao, tamanho = "gran
         <span className={`${t.rotulo} font-medium`}>Fica com você</span>
         <span className={`${valor} ${t.valorVerde}`}>{reais(ficaComVoce, { centavos: false })}</span>
       </div>
-      {/* No celular a parte âmbar ficaria estreita demais para o valor; ganha uma largura mínima. */}
-      <div className={`${bloco} bg-ambar text-petroleo max-sm:min-w-32`} style={{ flex: `${governo} 1 0%` }}>
+      <div className={`${bloco} bg-ambar text-petroleo`} style={{ flex: `${governo} 1 0%` }}>
         <span className={`${t.rotulo} font-semibold`}>{t.governo}</span>
         <span className={`${valor} ${t.valorAmbar}`}>{reais(governo, { centavos: false })}</span>
       </div>

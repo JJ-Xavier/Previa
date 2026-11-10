@@ -37,6 +37,10 @@
   --color-ambar-claro: #f6d29c;
   --color-ambar-fundo: #fdf1de;
 
+  /* Erro de preenchimento. Não usa âmbar, que já significa "governo". */
+  --color-erro: #b42318;
+  --color-erro-fundo: #fdecea;
+
   --radius-campo: 12px;
   --radius-bloco: 20px;
   --radius-cartao: 24px;
@@ -112,5 +116,45 @@
   .botao-contorno:hover {
     background: var(--color-papel);
     color: var(--color-petroleo);
+  }
+
+  /* Sair sem salvar: "Voltar", "Cancelar". */
+  .botao-texto {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0 8px;
+    color: var(--color-petroleo);
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .botao-texto:hover {
+    color: var(--color-petroleo-medio);
+    text-decoration: underline;
+  }
+
+  /* Caixa de texto dos formulários. */
+  .campo {
+    width: 100%;
+    min-height: 50px;
+    padding: 0 16px;
+    border: 1.5px solid var(--color-campo);
+    border-radius: var(--radius-campo);
+    background: var(--color-papel);
+    color: var(--color-petroleo);
+    font-size: 16px;
+  }
+
+  .campo[aria-invalid="true"] {
+    border-color: var(--color-erro);
+  }
+
+  .campo:disabled {
+    background: var(--color-mineral-claro);
+    color: var(--color-texto-suave);
   }
 }

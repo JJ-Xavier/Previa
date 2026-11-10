@@ -76,11 +76,11 @@ A tela principal mostrando os números da empresa.
 
 ## Etapa 4 · Entrada de dados (telas 1.2, 2.1 e 2.2)
 
-- [ ] Cadastro da empresa: nome, CNPJ, regime (Simples Nacional ou Lucro Presumido), venda para empresas e prazo médio.
-- [ ] Lançar venda, com a prévia da divisão atualizando enquanto o usuário digita.
-- [ ] Lista de vendas com editar e excluir.
-- [ ] Planilha: baixar o modelo CSV e importar o arquivo, avisando quais linhas têm erro.
-- [ ] Botões "Carregar exemplo" e "Apagar meus dados".
+- [x] Cadastro da empresa: nome, CNPJ, regime (Simples Nacional ou Lucro Presumido), venda para empresas e prazo médio.
+- [x] Lançar venda, com a prévia da divisão atualizando enquanto o usuário digita.
+- [x] Lista de vendas com editar e excluir.
+- [x] Planilha: baixar o modelo CSV e importar o arquivo, avisando quais linhas têm erro.
+- [x] Botões "Carregar exemplo" e "Apagar meus dados".
 
 **Pronto quando:** uma venda lançada à mão ou por planilha muda o Painel na hora.
 

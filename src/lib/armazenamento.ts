@@ -106,6 +106,11 @@ export function salvarVenda(empresaId: string, venda: Venda) {
   );
 }
 
+/** Acrescenta várias vendas de uma vez, como as de uma planilha. */
+export function adicionarVendas(empresaId: string, novas: Venda[]) {
+  alterarVendas(empresaId, (vendas) => [...vendas, ...novas]);
+}
+
 export function removerVenda(empresaId: string, vendaId: string) {
   alterarVendas(empresaId, (vendas) => vendas.filter((v) => v.id !== vendaId));
 }

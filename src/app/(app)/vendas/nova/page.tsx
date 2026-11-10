@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { EmConstrucao } from "@/components/EmConstrucao";
-import { TopoDaPagina } from "@/components/TopoDaPagina";
+import { Suspense } from "react";
+import { NovaVenda } from "./FormularioDeVenda";
 
 export const metadata: Metadata = { title: "Lançar venda" };
 
-export default function NovaVenda() {
+// O Suspense é exigido pelo useSearchParams (o ?editar=) no export estático.
+export default function PaginaNovaVenda() {
   return (
-    <>
-      <TopoDaPagina titulo="Lançar venda" />
-      <EmConstrucao etapa={4} />
-    </>
+    <Suspense>
+      <NovaVenda />
+    </Suspense>
   );
 }

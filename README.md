@@ -25,21 +25,23 @@ npm run dev
 | `npm run dev:web` | Só o Next, para testar no navegador |
 | `npm run build` | Gera o export estático em `out/` |
 | `npm start` | Gera o build e abre o app como no instalador |
-| `npm test` | Roda os testes do cálculo e do armazenamento |
+| `npm test` | Roda os testes do motor: cálculo, armazenamento, entrada de dados e planilha |
 | `npm run lint` | Verifica o código |
 
 ## Onde fica cada coisa
 
-- `src/app/(app)/`: telas com o menu (Painel, Projeção, Vendas, Transição, Em breve, Clientes)
+- `src/app/(app)/`: telas com o menu (Painel, Projeção, Vendas, Lançar venda, Dados da empresa, Transição, Em breve, Clientes)
 - `src/app/(acesso)/`: Entrar e Cadastro
-- `src/components/`: peças compartilhadas, como a `FaixaDividida` (verde e âmbar) e o `EstadoVazio`
-- Botões: use as classes `botao` (ação principal) e `botao-contorno` (secundária), definidas no `globals.css`
+- `src/components/`: peças compartilhadas, como a `FaixaDividida` (verde e âmbar), o `EstadoVazio`, o `Campo` e a `Opcao` dos formulários e o `FormularioDaEmpresa` (cadastro e edição)
+- Classes do `globals.css`: `botao` (ação principal), `botao-contorno` (secundária), `botao-texto` (Voltar, Cancelar) e `campo` (caixa de texto)
 - `src/lib/`: o motor, sem tela
   - `armazenamento.ts`: único lugar que lê e grava os dados. As telas usam `useDados()` e as funções daqui, nunca o localStorage direto
   - `calculo.ts`: retenção, resumo do mês, projeção, mês de maior retenção e capital de giro
   - `aliquotas.ts`: alíquota por ano e regime (26,5% provisória)
   - `exemplo.ts`: a empresa de exemplo, com os mesmos números do canvas
-  - `formatar.ts`: reais e nome do mês para mostrar na tela
+  - `entrada.ts`: lê valor, data e CNPJ digitados e valida empresa e venda (formulário e planilha usam a mesma regra)
+  - `planilha.ts`: modelo CSV e leitura da planilha enviada, com o erro de cada linha
+  - `formatar.ts`: reais, datas e nome do mês para mostrar na tela
   - `tipos.ts`: `Empresa`, `Venda` e `ResumoDoMes`. Dinheiro sempre em centavos
 - `src/app/globals.css`: cores, fontes e raios do visual, tirados do canvas
 - `electron/main.mjs`: janela do app
