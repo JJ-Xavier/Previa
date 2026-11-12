@@ -1,0 +1,6 @@
+1- area de tela, a responsividade da tela nao esta adequada quanto menos feita,
+toda hora tem que scrollar o mouse para cima ou para baixo e isso tem que ser alterado
+obvio que utilize o bom senso as areas que faz sentido rolar igual o painel principal tem que continuar assim
+2- as areas do prototipo nao estao completas no momento de cadastro eu sou limitado as opções
+tem que criar uma tela ou area algo do tipo
+3- o cadastro hoje nao existe aquela primeira area tem que ser de login e depois a opção de cadastro
