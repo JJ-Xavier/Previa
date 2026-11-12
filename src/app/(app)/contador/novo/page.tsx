@@ -13,7 +13,7 @@ export default function NovoCliente() {
         descricao="Com esses dados a Prévia aplica as regras certas na simulação do cliente."
         voltar={{ href: "/contador/", rotulo: "Seus clientes" }}
       />
-      <main className="mx-auto max-w-[1200px] px-4 pt-10 pb-16 sm:px-10">
+      <main className="mx-auto max-w-[1200px] px-4 pt-8 pb-12 sm:px-10">
         <FormularioDaEmpresa voltarPara="/contador/" rotuloDoBotao="Salvar cliente" />
       </main>
     </>

@@ -1,6 +1,7 @@
 # Roteiro da demonstração
 
-A demonstração leva cerca de 7 minutos e usa o app instalado, sem internet.
+A demonstração leva cerca de 7 minutos e usa o app instalado (versão 1.0.2),
+sem internet.
 Os valores de "Confira" foram tirados do app instalado, rodando este roteiro
 com a data do computador em novembro de 2026. Se um número na tela for
 diferente, algum passo saiu diferente do roteiro.
@@ -11,24 +12,33 @@ empresas.
 
 ## Antes de apresentar
 
-- [ ] Instalar com o `Previa-Setup-0.1.0.exe` no computador da apresentação.
-- [ ] Começar com o app vazio. Se ele abrir no Painel, ou em Entrar com um
-      e-mail já preenchido, sobraram dados de um ensaio: entre, vá em
-      **Vendas** e use **Apagar meus dados**, no fim da tela. O app volta
-      para Entrar, vazio.
-- [ ] Maximizar a janela. A internet pode ficar desligada.
-- [ ] Ensaiar uma vez do início ao fim e apagar os dados de novo.
+- [ ] Instalar com o `Previa-Setup-1.0.2.exe` no computador da apresentação.
+- [ ] Começar sem a conta do Marcos. Se sobrou de um ensaio, entre com
+      `marcos@boalimpeza.com.br` e a senha `boalimpeza`, vá em **Vendas** e
+      use **Apagar meus dados** e depois **Apagar conta e dados**. O app volta
+      para Entrar.
+- [ ] A internet pode ficar desligada. O app já abre maximizado.
+- [ ] Ensaiar uma vez do início ao fim e apagar a conta de novo.
 
 ## Roteiro
 
-### 1. Entrar (30 s)
+### 1. Criar a conta (45 s)
 
-**Faça:** abra a Prévia. Digite `marcos@boalimpeza.com.br` e clique em
-**Entrar**.
+**Faça:** abra a Prévia. Ela abre em Entrar. Clique em **Criar conta** e
+preencha:
+
+| Campo | Valor |
+|---|---|
+| Seu nome | `Marcos` |
+| E-mail | `marcos@boalimpeza.com.br` |
+| Senha | `boalimpeza` |
+| Repita a senha | `boalimpeza` |
+
+Clique em **Criar conta**.
 
 **Diga:** "Com o split payment, o imposto sai na hora em que o cliente paga, e
 não quando a guia vence. A Prévia mostra quanto de cada venda fica com a
-empresa. Os dados ficam só neste computador."
+empresa. Cada pessoa tem a sua conta, e os dados ficam só neste computador."
 
 **Confira:** abre a tela "Como você vai usar a Prévia?".
 
@@ -40,24 +50,28 @@ empresa. Os dados ficam só neste computador."
 |---|---|
 | Nome da empresa | `Distribuidora Boa Limpeza` |
 | CNPJ | `12.345.678/0001-95` |
-| Regime tributário | Simples Nacional (já vem marcado) |
 | Em média, quantos dias você leva para receber? | 30 (já vem preenchido) |
+| Regime tributário | Simples Nacional (já vem marcado) |
+| Para quem você vende mais? | Para outras empresas (já vem marcado) |
 
 Clique em **Continuar**.
 
-**Diga:** "MEI, Lucro Real e venda ao consumidor final aparecem como 'em
-breve': o split payment começa pelas vendas entre empresas."
+**Diga:** "Dá para escolher MEI, Simples, Lucro Presumido ou Lucro Real, e
+vender para empresas ou para o consumidor final. Quem vende no balcão nem
+precisa dizer o nome do cliente."
 
 **Confira:** abre Vendas e recebimentos, com "Distribuidora Boa Limpeza" no
 topo.
 
 ### 3. Dados de exemplo (30 s)
 
-**Faça:** em "Como colocar seus dados", clique em **Carregar exemplo**.
+**Faça:** na coluna da direita, em "Usar dados de exemplo", clique em
+**Carregar exemplo**.
 
 **Diga:** "Dá para lançar venda por venda, mandar uma planilha ou, para ver
 funcionando, carregar seis meses de vendas de exemplo. A importação de notas,
-banco e sistema de gestão vem depois." Aponte para "Conexões automáticas".
+banco e sistema de gestão vem depois." Aponte para "Conexões automáticas",
+logo abaixo.
 
 **Confira:** o topo passa a mostrar "Empresa exemplo" num seletor.
 
@@ -76,7 +90,8 @@ banco e sistema de gestão vem depois." Aponte para "Conexões automáticas".
 
 ### 5. Lançar uma venda (1 min)
 
-**Faça:** clique em **Vendas** no menu e depois em **Lançar venda**. Preencha:
+**Faça:** clique em **Vendas** no menu e depois em **Lançar venda**, ao lado de
+"Últimas vendas lançadas". Preencha:
 
 | Campo | Valor |
 |---|---|
@@ -101,13 +116,14 @@ tem vendas de janeiro a junho, então em 12 meses o segundo semestre aparece
 zerado.
 
 **Diga:** mostre o quadro "Uma venda de R$ 10.000, hoje e com o split
-payment": hoje os R$ 2.650 do imposto passam pelo caixa, com o split payment
-vão direto para o governo. Aponte "Até 2033", que está "em breve".
+payment", ao lado da tabela: hoje os R$ 2.650 do imposto passam pelo caixa,
+com o split payment vão direto para o governo. Aponte "Até 2033", que está
+"em breve": clicar nele abre a tela que explica o que vem.
 
 ### 7. Painel do contador (1 min)
 
-**Faça:** clique em **Vendas**, role até o fim e clique em **Trocar de
-perfil**. Escolha **Para os meus clientes**.
+**Faça:** clique em **Vendas**. No quadro "Sua empresa", embaixo da lista,
+clique em **Trocar de perfil**. Escolha **Para os meus clientes**.
 
 **Diga:** "A Fernanda é contadora. Ela vê todos os clientes numa lista só."
 
@@ -141,11 +157,15 @@ No MVP o e-mail fica guardado só no computador. Se perguntarem, diga isso.
 alíquota de referência de 26,5%: os números são uma estimativa para
 planejamento, não o valor da guia."
 
+**Faça (opcional):** clique em **Sair**, no canto do topo, e entre de novo com
+o e-mail e a senha do Marcos. Tudo continua onde estava.
+
 ## Se algo der errado
 
-- **O app abriu no Painel, ou com dados de outro ensaio:** vá em **Vendas** e
-  use **Apagar meus dados**. Se não der para entrar, desinstale e instale de
-  novo: desinstalar apaga os dados.
+- **"Já existe uma conta com este e-mail":** sobrou a conta de um ensaio.
+  Entre com ela (senha `boalimpeza`), vá em **Vendas** e use **Apagar meus
+  dados**. Se ninguém lembrar a senha, crie a conta com outro e-mail, ou
+  desinstale e instale de novo: desinstalar apaga todas as contas.
 - **"O Windows protegeu o computador" ao instalar:** clique em **Mais
   informações** e em **Executar assim mesmo**. Acontece porque o instalador
   não tem assinatura digital.
@@ -157,10 +177,10 @@ planejamento, não o valor da guia."
 
 Faça uma vez antes da apresentação, num computador que nunca teve o projeto:
 
-- [ ] Levar só o `Previa-Setup-0.1.0.exe`, num pendrive.
+- [ ] Levar só o `Previa-Setup-1.0.2.exe`, num pendrive.
 - [ ] Desligar a internet, no Wi-Fi e no cabo.
 - [ ] Instalar e passar pelo aviso do Windows.
 - [ ] Rodar o roteiro inteiro e conferir os valores.
-- [ ] Fechar e abrir o app: os dados continuam e ele abre direto no Painel.
+- [ ] Fechar e abrir o app: a conta continua aberta e ele abre direto no Painel.
 - [ ] Desinstalar em Configurações > Apps > Prévia e conferir que a pasta
       `%APPDATA%\Prévia` sumiu.

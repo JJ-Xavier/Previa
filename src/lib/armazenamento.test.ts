@@ -14,6 +14,8 @@ function localStorageFalso() {
     removeItem: (chave: string) => {
       itens.delete(chave);
     },
+    /** Tudo o que está guardado, para conferir o que nunca pode aparecer. */
+    tudo: () => [...itens.values()].join("\n"),
   };
 }
 
@@ -28,6 +30,7 @@ let app: Awaited<ReturnType<typeof abrirApp>>;
 beforeEach(async () => {
   vi.stubGlobal("localStorage", localStorageFalso());
   app = await abrirApp();
+  await app.criarConta("Ana", "ana@padaria.com.br", "senha-da-ana");
 });
 
 function empresa(id: string, nome: string): Empresa {
@@ -42,7 +45,7 @@ const vendaDeMarco: Venda = {
   dataRecebimento: "2027-03-10",
 };
 
-describe("armazenamento", () => {
+describe("dados da conta aberta", () => {
   it("começa vazio", () => {
     expect(app.lerDados()).toEqual({ empresas: [], ativaId: null });
   });
@@ -57,6 +60,7 @@ describe("armazenamento", () => {
   it("os dados continuam lá depois de fechar e abrir o app", async () => {
     app.carregarExemplo();
     const reaberto = await abrirApp();
+    expect(reaberto.lerConta()?.nome).toBe("Ana");
     expect(reaberto.empresaAtiva(reaberto.lerDados())?.nome).toBe("Empresa exemplo");
   });
 
@@ -118,48 +122,92 @@ describe("armazenamento", () => {
     expect(reaberto.lerDados().perfil).toBe("contador");
   });
 
-  it("apagar meus dados limpa o computador, inclusive o perfil", async () => {
-    app.definirPerfil("contador");
+  it("pedir aviso guarda o e-mail de cada recurso sem mexer nas empresas", () => {
     app.carregarExemplo();
-    app.apagarTudo();
-    expect(app.lerDados()).toEqual({ empresas: [], ativaId: null });
-    const reaberto = await abrirApp();
-    expect(reaberto.lerDados().empresas).toHaveLength(0);
-  });
-
-  it("entrar cria o acesso no primeiro uso e depois só abre com o mesmo e-mail", async () => {
-    expect(app.entrar("ana@padaria.com.br")).toBe(true);
-    app.sair();
-    expect(app.lerDados().acesso).toEqual({ email: "ana@padaria.com.br", aberto: false });
-    expect(app.entrar("outro@padaria.com.br")).toBe(false);
-    expect(app.lerDados().acesso?.aberto).toBe(false);
-    expect(app.entrar("ana@padaria.com.br")).toBe(true);
-    const reaberto = await abrirApp();
-    expect(reaberto.lerDados().acesso).toEqual({ email: "ana@padaria.com.br", aberto: true });
-  });
-
-  it("sair e pedir aviso não mexem nas empresas", () => {
-    app.carregarExemplo();
-    app.entrar("ana@padaria.com.br");
     app.pedirAviso("nfe", "ana@padaria.com.br");
     app.pedirAviso("credito", "financeiro@padaria.com.br");
-    app.sair();
     const dados = app.lerDados();
     expect(dados.empresas).toHaveLength(1);
     expect(dados.avisos).toEqual({ nfe: "ana@padaria.com.br", credito: "financeiro@padaria.com.br" });
   });
 
-  it("apagar meus dados também apaga o acesso e os avisos", () => {
-    app.entrar("ana@padaria.com.br");
-    app.pedirAviso("nfe", "ana@padaria.com.br");
-    app.apagarTudo();
-    expect(app.lerDados().acesso).toBeUndefined();
-    expect(app.entrar("outro@padaria.com.br")).toBe(true);
-  });
-
   it("dado estragado no computador é tratado como vazio", async () => {
-    localStorage.setItem("previa:dados", "{isso não é json");
+    const id = app.lerConta()!.id;
+    localStorage.setItem(`previa:dados:${id}`, "{isso não é json");
     const reaberto = await abrirApp();
     expect(reaberto.lerDados()).toEqual({ empresas: [], ativaId: null });
+  });
+});
+
+describe("contas", () => {
+  it("entrar confere e-mail e senha", async () => {
+    app.sair();
+    expect(app.lerConta()).toBeNull();
+    expect(await app.entrar("ana@padaria.com.br", "senha-errada")).toBe(false);
+    expect(await app.entrar("outra@padaria.com.br", "senha-da-ana")).toBe(false);
+    expect(app.lerConta()).toBeNull();
+    expect(await app.entrar("ana@padaria.com.br", "senha-da-ana")).toBe(true);
+    expect(app.lerConta()).toMatchObject({ nome: "Ana", email: "ana@padaria.com.br" });
+  });
+
+  it("a senha nunca fica guardada como texto", () => {
+    expect((localStorage as unknown as { tudo: () => string }).tudo()).not.toContain("senha-da-ana");
+  });
+
+  it("um e-mail só tem uma conta", async () => {
+    app.sair();
+    expect(await app.criarConta("Outra Ana", "ana@padaria.com.br", "outra-senha")).toBe(false);
+  });
+
+  it("cada conta vê só os próprios dados", async () => {
+    app.carregarExemplo();
+    app.sair();
+    await app.criarConta("Bruno", "bruno@mercado.com.br", "senha-do-bruno");
+    expect(app.lerDados().empresas).toHaveLength(0);
+
+    app.sair();
+    await app.entrar("ana@padaria.com.br", "senha-da-ana");
+    expect(app.empresaAtiva(app.lerDados())?.nome).toBe("Empresa exemplo");
+  });
+
+  it("sair fecha a conta sem apagar nada, e sem conta não há o que gravar", async () => {
+    app.carregarExemplo();
+    app.sair();
+    expect(app.lerDados()).toEqual({ empresas: [], ativaId: null });
+    expect(() => app.carregarExemplo()).toThrow();
+    await app.entrar("ana@padaria.com.br", "senha-da-ana");
+    expect(app.lerDados().empresas).toHaveLength(1);
+  });
+
+  it("apagar meus dados apaga a conta aberta e mantém as outras", async () => {
+    app.sair();
+    await app.criarConta("Bruno", "bruno@mercado.com.br", "senha-do-bruno");
+    app.definirPerfil("contador");
+    app.apagarConta();
+
+    expect(app.lerConta()).toBeNull();
+    expect(await app.entrar("bruno@mercado.com.br", "senha-do-bruno")).toBe(false);
+    expect(await app.entrar("ana@padaria.com.br", "senha-da-ana")).toBe(true);
+    // O e-mail volta a ficar livre para uma conta nova.
+    app.sair();
+    expect(await app.criarConta("Bruno", "bruno@mercado.com.br", "nova-senha")).toBe(true);
+    expect(app.lerDados()).toEqual({ empresas: [], ativaId: null });
+  });
+
+  it("a primeira conta fica com os dados da versão sem contas", async () => {
+    vi.stubGlobal("localStorage", localStorageFalso());
+    localStorage.setItem(
+      "previa:dados",
+      JSON.stringify({ empresas: [criarEmpresaExemplo()], ativaId: "exemplo", perfil: "contador", acesso: { email: "x@y.com", aberto: true } }),
+    );
+    const novo = await abrirApp();
+    await novo.criarConta("Ana", "ana@padaria.com.br", "senha-da-ana");
+    expect(novo.lerDados()).toEqual({ empresas: [criarEmpresaExemplo()], ativaId: "exemplo", perfil: "contador" });
+    expect(localStorage.getItem("previa:dados")).toBeNull();
+
+    // A segunda conta começa vazia.
+    novo.sair();
+    await novo.criarConta("Bruno", "bruno@mercado.com.br", "senha-do-bruno");
+    expect(novo.lerDados().empresas).toHaveLength(0);
   });
 });

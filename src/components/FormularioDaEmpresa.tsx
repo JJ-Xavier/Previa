@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { abrirEmpresa, novoId, salvarEmpresa } from "@/lib/armazenamento";
 import { validarEmpresa, type CamposDaEmpresa, type Erros } from "@/lib/entrada";
-import type { Empresa } from "@/lib/tipos";
+import type { Empresa, Publico, Regime } from "@/lib/tipos";
 import { Campo, Opcao } from "./Campo";
-import { SeloEmBreve } from "./SeloEmBreve";
 
 type Props = {
   /** Sem empresa, cria uma nova e a abre. Com empresa, edita os dados dela. */
@@ -18,12 +17,26 @@ type Props = {
   rotuloDoBotao?: string;
 };
 
+const regimes: { valor: Regime; titulo: string; descricao: string }[] = [
+  { valor: "mei", titulo: "MEI", descricao: "Até R$ 81 mil por ano" },
+  { valor: "simples", titulo: "Simples Nacional", descricao: "O da maioria das pequenas" },
+  { valor: "presumido", titulo: "Lucro Presumido", descricao: "Na dúvida, pergunte ao contador" },
+  { valor: "real", titulo: "Lucro Real", descricao: "Empresas maiores" },
+];
+
+const publicos: { valor: Publico; titulo: string; descricao: string }[] = [
+  { valor: "empresas", titulo: "Para outras empresas", descricao: "Condomínios, escritórios, lojas" },
+  { valor: "consumidor", titulo: "Para o consumidor final", descricao: "Pessoas, no balcão ou na internet" },
+];
+
+// Duas colunas em tela larga: quem é a empresa à esquerda, como ela vende à direita.
 export function FormularioDaEmpresa({ existente, voltarPara, rotuloDoBotao }: Props) {
   const router = useRouter();
   const [campos, setCampos] = useState<CamposDaEmpresa>({
     nome: existente?.nome ?? "",
     cnpj: existente?.cnpj ?? "",
     regime: existente?.regime ?? "simples",
+    publico: existente?.publico ?? "empresas",
     prazoMedioDias: String(existente?.prazoMedioDias ?? 30),
   });
   const [tentouSalvar, setTentouSalvar] = useState(false);
@@ -56,99 +69,80 @@ export function FormularioDaEmpresa({ existente, voltarPara, rotuloDoBotao }: Pr
       noValidate
       onSubmit={salvar}
       aria-label="Dados da empresa"
-      className="flex max-w-[760px] flex-col gap-[30px] rounded-cartao bg-papel p-6 sm:p-8"
+      className="flex max-w-[1080px] flex-col gap-5 rounded-cartao bg-papel p-6 sm:px-8 sm:py-6"
     >
-      <div className="flex flex-wrap gap-5">
-        <Campo
-          id="nome"
-          rotulo="Nome da empresa"
-          autoComplete="organization"
-          placeholder="Ex.: Distribuidora Boa Limpeza"
-          value={campos.nome}
-          onChange={mudar("nome")}
-          erro={erros.nome}
-          className="flex-[2_1_300px]"
-        />
-        <Campo
-          id="cnpj"
-          rotulo="CNPJ"
-          placeholder="00.000.000/0000-00"
-          value={campos.cnpj}
-          onChange={mudar("cnpj")}
-          erro={erros.cnpj}
-          className="flex-[1_1_200px]"
-        />
+      <div className="grid gap-x-10 gap-y-5 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+        <div className="flex flex-col gap-5">
+          <Campo
+            id="nome"
+            rotulo="Nome da empresa"
+            autoComplete="organization"
+            placeholder="Ex.: Distribuidora Boa Limpeza"
+            value={campos.nome}
+            onChange={mudar("nome")}
+            erro={erros.nome}
+          />
+          <Campo
+            id="cnpj"
+            rotulo="CNPJ"
+            placeholder="00.000.000/0000-00"
+            value={campos.cnpj}
+            onChange={mudar("cnpj")}
+            erro={erros.cnpj}
+          />
+          <Campo
+            id="prazoMedioDias"
+            rotulo="Em média, quantos dias você leva para receber?"
+            type="number"
+            inputMode="numeric"
+            min={0}
+            max={365}
+            sufixo="dias depois da venda"
+            value={campos.prazoMedioDias}
+            onChange={mudar("prazoMedioDias")}
+            erro={erros.prazoMedioDias}
+            dica="Preenche a data de recebimento das vendas a prazo. Use 0 se recebe na hora."
+          />
+        </div>
+
+        <div className="flex flex-col gap-5">
+          <fieldset>
+            <legend className="mb-2 text-sm font-semibold">Regime tributário</legend>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {regimes.map(({ valor, titulo, descricao }) => (
+                <Opcao
+                  key={valor}
+                  name="regime"
+                  value={valor}
+                  checked={campos.regime === valor}
+                  onChange={() => setCampos({ ...campos, regime: valor })}
+                  titulo={titulo}
+                  descricao={descricao}
+                />
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend className="mb-2 text-sm font-semibold">Para quem você vende mais?</legend>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {publicos.map(({ valor, titulo, descricao }) => (
+                <Opcao
+                  key={valor}
+                  name="publico"
+                  value={valor}
+                  checked={campos.publico === valor}
+                  onChange={() => setCampos({ ...campos, publico: valor })}
+                  titulo={titulo}
+                  descricao={descricao}
+                />
+              ))}
+            </div>
+          </fieldset>
+        </div>
       </div>
 
-      <fieldset>
-        <legend className="mb-3 text-sm font-semibold">Regime tributário</legend>
-        <div className="flex flex-wrap gap-2.5">
-          <Opcao
-            name="regime"
-            value="simples"
-            checked={campos.regime === "simples"}
-            onChange={() => setCampos({ ...campos, regime: "simples" })}
-            titulo="Simples Nacional"
-            descricao="A maioria das pequenas empresas"
-            className="basis-[190px]"
-          />
-          <Opcao
-            name="regime"
-            value="presumido"
-            checked={campos.regime === "presumido"}
-            onChange={() => setCampos({ ...campos, regime: "presumido" })}
-            titulo="Lucro Presumido"
-            descricao="Se não souber, pergunte ao seu contador"
-            className="basis-[190px]"
-          />
-          <Opcao
-            name="regime"
-            value="outro"
-            emBreve
-            titulo="MEI ou Lucro Real"
-            descricao={<SeloEmBreve />}
-            className="basis-[190px]"
-          />
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend className="mb-3 text-sm font-semibold">Para quem você vende mais?</legend>
-        <div className="flex flex-wrap gap-2.5">
-          <Opcao
-            name="publico"
-            value="empresas"
-            defaultChecked
-            titulo="Para outras empresas"
-            descricao="Condomínios, escritórios, restaurantes, lojas"
-            className="basis-[260px]"
-          />
-          <Opcao
-            name="publico"
-            value="consumidor"
-            emBreve
-            titulo="Para o consumidor final"
-            descricao="O split payment começa pelas vendas entre empresas. Esse caso entra numa próxima versão."
-            className="basis-[260px]"
-          />
-        </div>
-      </fieldset>
-
-      <Campo
-        id="prazoMedioDias"
-        rotulo="Em média, quantos dias você leva para receber?"
-        type="number"
-        inputMode="numeric"
-        min={0}
-        max={365}
-        sufixo="dias depois da venda"
-        value={campos.prazoMedioDias}
-        onChange={mudar("prazoMedioDias")}
-        erro={erros.prazoMedioDias}
-        dica="Usado para preencher a data de recebimento das vendas a prazo."
-      />
-
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-linha-suave pt-4">
         <Link href={voltarPara ?? (existente ? "/vendas/" : "/")} className="botao-texto">
           Voltar
         </Link>

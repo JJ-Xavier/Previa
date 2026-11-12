@@ -44,7 +44,7 @@ export function Clientes() {
         )}
       </TopoDaPagina>
 
-      <main className="mx-auto flex max-w-[1200px] flex-col gap-5 px-4 pt-12 pb-[72px] sm:px-10">
+      <main className="mx-auto flex max-w-[1200px] flex-col gap-5 px-4 pt-8 pb-12 sm:px-10">
         {clientes.length === 0 ? (
           <section
             aria-labelledby="sem-clientes"

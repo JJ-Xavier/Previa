@@ -11,7 +11,7 @@ export default function Cadastro() {
         titulo="Conte um pouco sobre sua empresa"
         descricao="Com essas respostas a Prévia aplica as regras certas na sua simulação."
       />
-      <main className="mx-auto max-w-[1200px] px-4 pt-10 pb-16 sm:px-10">
+      <main className="mx-auto max-w-[1200px] px-4 pt-8 pb-12 sm:px-10">
         <FormularioDaEmpresa />
       </main>
     </>

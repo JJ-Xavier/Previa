@@ -20,7 +20,7 @@ export function DadosDaEmpresa() {
         descricao="Mudar o regime ou o prazo médio atualiza a simulação na hora."
         voltar={{ href: "/vendas/", rotulo: "Vendas e recebimentos" }}
       />
-      <main className="mx-auto max-w-[1200px] px-4 pt-10 pb-16 sm:px-10">
+      <main className="mx-auto max-w-[1200px] px-4 pt-8 pb-12 sm:px-10">
         <FormularioDaEmpresa key={empresa.id} existente={empresa} />
       </main>
     </>

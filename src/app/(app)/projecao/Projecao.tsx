@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, type ReactNode } from "react";
 import { AvisoDeEstimativa } from "@/components/AvisoDeEstimativa";
 import { EstadoVazio } from "@/components/EstadoVazio";
@@ -42,10 +43,10 @@ export function Projecao() {
   return (
     <>
       <div className="faixa bg-petroleo text-mineral-claro">
-        <div className="mx-auto flex max-w-[1200px] flex-wrap items-end justify-between gap-5 px-4 pt-8 pb-11 sm:px-10">
-          <div className="flex flex-col gap-2.5">
-            <p className="text-base text-nevoa">{intervaloDeMeses(inicio, fim)}</p>
-            <h1 className="font-display text-[clamp(32px,4vw,48px)] leading-[1.05] font-bold tracking-[-0.035em]">
+        <div className="mx-auto flex max-w-[1200px] flex-wrap items-end justify-between gap-5 px-4 pt-5 pb-8 sm:px-10">
+          <div className="flex flex-col gap-2">
+            <p className="text-[15px] text-nevoa">{intervaloDeMeses(inicio, fim)}</p>
+            <h1 className="font-display text-[clamp(28px,3.2vw,40px)] leading-[1.05] font-bold tracking-[-0.03em]">
               Projeção mensal
             </h1>
           </div>
@@ -61,19 +62,20 @@ export function Projecao() {
                 {n} meses
               </button>
             ))}
-            <button type="button" disabled className={`${opcao} text-nevoa`}>
+            <Link
+              href="/em-breve/projecao-2033/"
+              className={`${opcao} text-nevoa no-underline hover:text-mineral-claro`}
+            >
               Até 2033 <SeloEmBreve naFaixa />
-            </button>
+            </Link>
           </div>
         </div>
       </div>
 
-      <main className="mx-auto flex max-w-[1200px] flex-col gap-12 px-4 pt-12 pb-[72px] sm:px-10">
-        <Comparacao {...exemplo} />
-
-        <section aria-labelledby="tabela-titulo" className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <h2 id="tabela-titulo" className="font-display text-[26px] leading-tight font-bold tracking-[-0.02em]">
+      <main className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-x-8 gap-y-6 px-4 pt-8 pb-12 sm:px-10">
+        <section aria-labelledby="tabela-titulo" className="flex min-w-0 flex-[3_1_560px] flex-col gap-3">
+          <div className="flex flex-col gap-1">
+            <h2 id="tabela-titulo" className="font-display text-2xl leading-tight font-bold tracking-[-0.02em]">
               Mês a mês
             </h2>
             <p className="text-[15px] text-texto-suave">A retenção acompanha o dia em que cada cliente paga.</p>
@@ -143,13 +145,15 @@ export function Projecao() {
           </div>
           <AvisoDeEstimativa regime={empresa.regime} />
         </section>
+
+        <Comparacao {...exemplo} />
       </main>
     </>
   );
 }
 
-const celula = "px-[22px] py-4";
-const rodape = "px-[22px] py-[18px]";
+const celula = "px-5 py-3";
+const rodape = "px-5 py-3.5";
 
 // Uma venda de R$ 10.000: hoje o imposto passa pelo caixa; com o split payment, não.
 function Comparacao({ governo, ficaComVoce }: { governo: Centavos; ficaComVoce: Centavos }) {
@@ -161,8 +165,11 @@ function Comparacao({ governo, ficaComVoce }: { governo: Centavos; ficaComVoce: 
   const nota = "flex min-w-0 items-center px-3 py-2 text-[13px] leading-[1.3] font-semibold";
 
   return (
-    <section aria-labelledby="comparacao-titulo" className="flex flex-col gap-7 rounded-cartao bg-papel p-6 sm:p-8">
-      <h2 id="comparacao-titulo" className="font-display text-[26px] leading-tight font-bold tracking-[-0.02em]">
+    <section
+      aria-labelledby="comparacao-titulo"
+      className="flex min-w-0 flex-[2_1_320px] flex-col gap-5 rounded-cartao bg-papel p-6 lg:mt-11"
+    >
+      <h2 id="comparacao-titulo" className="font-display text-xl leading-tight font-bold tracking-[-0.02em]">
         Uma venda de R$ 10.000, hoje e com o split payment
       </h2>
 
@@ -204,10 +211,10 @@ function Comparacao({ governo, ficaComVoce }: { governo: Centavos; ficaComVoce: 
 
 function Cenario({ titulo, resumo, children }: { titulo: string; resumo: string; children: ReactNode }) {
   return (
-    <div className="flex flex-col gap-2.5">
-      <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1.5">
-        <h3 className="text-[17px] font-semibold">{titulo}</h3>
-        <span className="text-[15px] text-texto-suave">{resumo}</span>
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-0.5">
+        <h3 className="text-base font-semibold">{titulo}</h3>
+        <span className="text-sm text-texto-suave">{resumo}</span>
       </div>
       {children}
     </div>

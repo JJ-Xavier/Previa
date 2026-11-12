@@ -20,6 +20,14 @@ async function abrirJanela() {
     icon: path.join(raiz, "electron", "icone.png"),
     backgroundColor: "#EEF2F0",
     autoHideMenuBar: true,
+    show: false,
+  });
+
+  // Abre maximizada: em notebook, a tela inteira evita rolar à toa. Ao
+  // restaurar, volta para 1280x860.
+  janela.once("ready-to-show", () => {
+    janela.maximize();
+    janela.show();
   });
 
   // Links externos abrem no navegador do sistema, não dentro do app.

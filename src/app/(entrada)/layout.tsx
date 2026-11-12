@@ -1,27 +1,24 @@
-import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { FaixaDividida } from "@/components/FaixaDividida";
 import { Marca } from "@/components/Marca";
 import { dividirValor } from "@/lib/calculo";
 import { reais } from "@/lib/formatar";
-import { FormularioDeEntrada } from "./FormularioDeEntrada";
-
-export const metadata: Metadata = { title: "Entrar" };
 
 // Uma venda de R$ 10.000 dividida pelo mesmo cálculo do Painel.
 const VENDA = 1_000_000;
 const exemplo = dividirValor(VENDA, "2027-01", "simples");
 
-// Fora das telas do app: a faixa escura explica a Prévia, o formulário fica ao lado.
-export default function Entrar() {
+// Entrar e Criar conta: a faixa escura explica a Prévia, o formulário fica ao lado.
+export default function LayoutEntrada({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-wrap">
       <section
         aria-label="Sobre a Prévia"
-        className="faixa flex flex-[1_1_460px] flex-col gap-10 bg-petroleo px-6 pt-10 pb-12 text-mineral-claro sm:px-12"
+        className="faixa flex flex-[1_1_460px] flex-col gap-8 bg-petroleo px-6 pt-8 pb-10 text-mineral-claro sm:px-12"
       >
         <Marca />
-        <div className="mt-auto flex flex-col gap-[18px]">
-          <h1 className="max-w-[14ch] font-display text-[clamp(36px,4.4vw,54px)] leading-[1.02] font-bold tracking-[-0.035em]">
+        <div className="mt-auto flex flex-col gap-4">
+          <h1 className="max-w-[14ch] font-display text-[clamp(34px,4.2vw,52px)] leading-[1.02] font-bold tracking-[-0.035em]">
             Saiba quanto de cada venda fica com você.
           </h1>
           <p className="max-w-[34rem] text-[17px] leading-relaxed text-nevoa">
@@ -40,9 +37,7 @@ export default function Entrar() {
         </figure>
       </section>
 
-      <main className="flex flex-[1_1_420px] items-center justify-center px-4 py-12 sm:px-8">
-        <FormularioDeEntrada />
-      </main>
+      <main className="flex flex-[1_1_420px] items-center justify-center px-4 py-10 sm:px-8">{children}</main>
     </div>
   );
 }

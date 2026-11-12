@@ -10,7 +10,7 @@ type Item = { href: string; rotulo: ReactNode; /** Outras telas em que o item fi
 
 const itens: Item[] = [
   { href: "/", rotulo: "Painel" },
-  { href: "/projecao/", rotulo: "Projeção" },
+  { href: "/projecao/", rotulo: "Projeção", tambem: ["/em-breve/projecao-2033/"] },
   // As conexões "em breve" saem da tela de Vendas.
   { href: "/vendas/", rotulo: "Vendas", tambem: ["/empresa/", "/em-breve/nfe/", "/em-breve/banco/", "/em-breve/erp/"] },
   { href: "/transicao/", rotulo: "Transição" },

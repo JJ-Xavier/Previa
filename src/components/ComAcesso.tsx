@@ -2,18 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, type ReactNode } from "react";
-import { useDados } from "@/lib/armazenamento";
+import { useConta } from "@/lib/armazenamento";
 
-// As telas do app só aparecem com o acesso aberto. Sem ele, a pessoa vai para Entrar.
+// As telas do app só aparecem com uma conta aberta. Sem ela, a pessoa vai para Entrar.
 export function ComAcesso({ children }: { children: ReactNode }) {
-  const dados = useDados();
+  const conta = useConta();
   const router = useRouter();
-  const fechado = dados !== null && !dados.acesso?.aberto;
+  const fora = conta === null;
 
   useEffect(() => {
-    if (fechado) router.replace("/entrar/");
-  }, [fechado, router]);
+    if (fora) router.replace("/entrar/");
+  }, [fora, router]);
 
-  if (!dados || fechado) return null;
+  if (!conta) return null;
   return children;
 }

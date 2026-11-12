@@ -29,42 +29,39 @@ export default function Transicao() {
         <LinhaDoTempo />
       </TopoDaPagina>
 
-      <main className="mx-auto flex max-w-[1200px] flex-col gap-5 px-4 pt-12 pb-[72px] sm:px-10">
-        <h2 className="font-display text-[26px] leading-tight font-bold tracking-[-0.02em]">
+      <main className="mx-auto flex max-w-[1200px] flex-col gap-4 px-4 pt-8 pb-12 sm:px-10">
+        <h2 className="font-display text-2xl leading-tight font-bold tracking-[-0.02em]">
           O que muda no seu caixa em cada fase
         </h2>
 
-        <div className="rounded-cartao bg-papel px-6 py-2 sm:px-7">
+        {/* Uma coluna por fase, na mesma ordem da linha do tempo acima. */}
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {fases.map((fase, i) => (
             <section
               key={fase.de}
               aria-labelledby={`fase-${fase.de}`}
-              className="flex flex-wrap gap-x-8 gap-y-2 border-b border-linha-suave py-[22px] last:border-b-0"
+              className="flex flex-col gap-2 rounded-bloco bg-papel px-5 py-4"
             >
-              <div className="flex flex-[0_0_170px] flex-col gap-1.5">
-                <span className="font-display text-[26px] font-bold">{anosDaFase(fase)}</span>
-                <span className={`self-start rounded-md px-2.5 py-[3px] text-xs font-semibold ${selos[i]}`}>
-                  {fase.selo}
-                </span>
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="font-display text-[22px] font-bold">{anosDaFase(fase)}</span>
+                <span className={`rounded-md px-2.5 py-[3px] text-xs font-semibold ${selos[i]}`}>{fase.selo}</span>
               </div>
-              <div className="flex flex-[1_1_360px] flex-col gap-1.5">
-                <h3 id={`fase-${fase.de}`} className="text-lg font-semibold">
-                  {fase.titulo}
-                </h3>
-                <p className="max-w-[46rem] text-[15px] leading-relaxed text-texto-suave">{fase.texto}</p>
-              </div>
+              <h3 id={`fase-${fase.de}`} className="text-base font-semibold">
+                {fase.titulo}
+              </h3>
+              <p className="text-sm leading-relaxed text-texto-suave">{fase.texto}</p>
             </section>
           ))}
         </div>
 
         <section
           aria-labelledby="conta-titulo"
-          className="mt-4 flex max-w-[760px] flex-col gap-2 rounded-cartao border-[1.5px] border-dashed border-tracejado px-6 py-6 sm:px-7"
+          className="mt-2 flex flex-col gap-1.5 rounded-bloco border-[1.5px] border-dashed border-tracejado px-5 py-4"
         >
-          <h2 id="conta-titulo" className="font-display text-[22px] font-bold tracking-[-0.02em]">
+          <h2 id="conta-titulo" className="text-base font-semibold">
             Como a Prévia faz a conta hoje
           </h2>
-          <p className="text-[15px] leading-relaxed text-texto-suave">
+          <p className="max-w-[70rem] text-sm leading-relaxed text-texto-suave">
             As alíquotas de IBS e CBS de cada ano e de cada regime ainda vão ser definidas. Até lá, a Prévia usa uma
             alíquota de referência de {referencia} em todos os anos. Por isso os números do{" "}
             <Link href="/" className="font-semibold">

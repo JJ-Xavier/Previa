@@ -42,7 +42,7 @@ export default async function EmBreve(props: PageProps<"/em-breve/[recurso]">) {
         }
       />
 
-      <main className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-6 px-4 pt-12 pb-[72px] sm:px-10">
+      <main className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-6 px-4 pt-8 pb-12 sm:px-10">
         <section
           aria-labelledby="muda-titulo"
           className="flex min-w-0 flex-[3_1_420px] flex-col gap-1 rounded-cartao bg-papel p-6 sm:p-7"

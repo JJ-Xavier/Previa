@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { cnpjValido, formatarCnpj, lerData, lerValor, validarEmail, validarEmpresa, validarVenda } from "./entrada";
+import { cnpjValido, formatarCnpj, lerData, lerValor, validarConta, validarEmail, validarEmpresa, validarEntrada, validarVenda } from "./entrada";
 import { lerPlanilha, modeloDaPlanilha, textoDoArquivo } from "./planilha";
 
 describe("lerValor", () => {
@@ -93,16 +93,53 @@ describe("validarVenda", () => {
     const { erros } = validarVenda({ ...venda, dataRecebimento: "2027-02-01" }, 30);
     expect(erros.dataRecebimento).toBe("O recebimento não pode ser antes da venda.");
   });
+
+  it("quem vende ao consumidor final pode deixar o cliente em branco", () => {
+    const semCliente = { ...venda, cliente: " " };
+    expect(validarVenda(semCliente, 30, "consumidor").venda?.cliente).toBe("Consumidor final");
+    expect(validarVenda(semCliente, 30, "empresas").erros.cliente).toBe("Falta o nome do cliente.");
+  });
+});
+
+describe("validarConta e validarEntrada", () => {
+  it("criar conta pede nome, e-mail completo e senha de 8 caracteres", () => {
+    const certa = { nome: " Ana ", email: "Ana@Padaria.com.br", senha: "12345678", confirmacao: "12345678" };
+    expect(validarConta(certa).conta).toEqual({
+      nome: "Ana",
+      email: "ana@padaria.com.br",
+      senha: "12345678",
+    });
+    const { erros } = validarConta({ nome: "", email: "ana@", senha: "1234", confirmacao: "1234" });
+    expect(erros).toEqual({
+      nome: "Falta o seu nome.",
+      email: "Escreva o e-mail completo, como voce@suaempresa.com.br.",
+      senha: "A senha precisa ter pelo menos 8 caracteres.",
+    });
+  });
+
+  it("criar conta pede a senha repetida igual", () => {
+    const base = { nome: "Ana", email: "ana@padaria.com.br", senha: "12345678" };
+    expect(validarConta({ ...base, confirmacao: "" }).erros.confirmacao).toBe("Repita a senha para conferir.");
+    const diferente = validarConta({ ...base, confirmacao: "12345679" });
+    expect(diferente.erros.confirmacao).toBe("As duas senhas não são iguais.");
+    expect(diferente.conta).toBeUndefined();
+  });
+
+  it("entrar pede e-mail e senha", () => {
+    expect(validarEntrada({ email: "ana@padaria.com.br", senha: "" }).erros.senha).toBe("Falta a senha.");
+    expect(validarEntrada({ email: " ANA@padaria.com.br", senha: "x" }).email).toBe("ana@padaria.com.br");
+  });
 });
 
 describe("validarEmpresa", () => {
-  const empresa = { nome: "Empresa exemplo", cnpj: "11222333000181", regime: "simples" as const, prazoMedioDias: "30" };
+  const empresa = { nome: "Empresa exemplo", cnpj: "11222333000181", regime: "mei" as const, publico: "consumidor" as const, prazoMedioDias: "30" };
 
   it("devolve os dados com o CNPJ formatado", () => {
     expect(validarEmpresa(empresa).dados).toEqual({
       nome: "Empresa exemplo",
       cnpj: "11.222.333/0001-81",
-      regime: "simples",
+      regime: "mei",
+      publico: "consumidor",
       prazoMedioDias: 30,
     });
   });

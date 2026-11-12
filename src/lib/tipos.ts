@@ -7,7 +7,10 @@ export type DataISO = string;
 /** Mês no formato AAAA-MM. */
 export type Mes = string;
 
-export type Regime = "simples" | "presumido";
+export type Regime = "mei" | "simples" | "presumido" | "real";
+
+/** Para quem a empresa vende mais. Muda o formulário de venda, não a conta. */
+export type Publico = "empresas" | "consumidor";
 
 export type Venda = {
   id: string;
@@ -24,6 +27,8 @@ export type Empresa = {
   nome: string;
   cnpj: string;
   regime: Regime;
+  /** Empresas cadastradas antes da versão 1.0.2 não têm: contam como "empresas". */
+  publico?: Publico;
   /** Dias, em média, entre a venda e o recebimento. */
   prazoMedioDias: number;
   vendas: Venda[];

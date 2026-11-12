@@ -2,7 +2,7 @@
 
 import { sair } from "@/lib/armazenamento";
 
-// Fecha o acesso. A tela some e o ComAcesso leva para Entrar, com o e-mail já preenchido.
+// Fecha a conta. A tela some e o ComAcesso leva para Entrar.
 export function Sair() {
   return (
     <button

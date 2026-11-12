@@ -33,7 +33,7 @@ export function EscolhaDePerfil() {
   }
 
   return (
-    <main className="mx-auto max-w-[1200px] px-4 pt-10 pb-16 sm:px-10">
+    <main className="mx-auto max-w-[1200px] px-4 pt-8 pb-12 sm:px-10">
       <div className="grid max-w-[880px] gap-4 sm:grid-cols-2">
         <CartaoDePerfil
           titulo="Para a minha empresa"

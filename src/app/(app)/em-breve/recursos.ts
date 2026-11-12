@@ -69,6 +69,22 @@ export const recursos = {
       rotulo: "Ver projeção",
     },
   },
+  "projecao-2033": {
+    titulo: "Projeção até 2033",
+    descricao:
+      "A Prévia vai projetar o seu caixa ano a ano até o fim da transição, com a alíquota de cada ano e o seu ritmo de vendas.",
+    nome: "a projeção até 2033",
+    beneficios: [
+      "Você vê o impacto de cada fase da reforma no seu caixa, não só nos próximos meses.",
+      "A projeção usa as alíquotas oficiais de cada ano, quando forem publicadas.",
+      "Dá para planejar preço e capital de giro com anos de antecedência.",
+    ],
+    enquanto: {
+      texto: "Enquanto isso, veja a projeção de 6 ou 12 meses.",
+      href: "/projecao/",
+      rotulo: "Ver projeção",
+    },
+  },
 } satisfies Record<string, Recurso>;
 
 export type ChaveDoRecurso = keyof typeof recursos;

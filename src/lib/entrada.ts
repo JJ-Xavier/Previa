@@ -1,5 +1,5 @@
 import { somarDias } from "./datas";
-import type { Centavos, DataISO, Empresa, Regime, Venda } from "./tipos";
+import type { Centavos, DataISO, Empresa, Publico, Regime, Venda } from "./tipos";
 
 /*
   Leitura e validação do que a pessoa digita, no formulário ou na planilha.
@@ -77,10 +77,13 @@ export type CamposDaVenda = {
   dataRecebimento: string;
 };
 
-export function validarVenda(campos: CamposDaVenda, prazoMedioDias: number) {
+/** Quem vende ao consumidor final pode deixar o cliente em branco. */
+export const CONSUMIDOR_FINAL = "Consumidor final";
+
+export function validarVenda(campos: CamposDaVenda, prazoMedioDias: number, publico: Publico = "empresas") {
   const erros: Erros<CamposDaVenda> = {};
 
-  const cliente = campos.cliente.trim();
+  const cliente = campos.cliente.trim() || (publico === "consumidor" ? CONSUMIDOR_FINAL : "");
   if (!cliente) erros.cliente = "Falta o nome do cliente.";
 
   const cnpj = campos.cnpjCliente.trim();
@@ -123,6 +126,7 @@ export type CamposDaEmpresa = {
   nome: string;
   cnpj: string;
   regime: Regime;
+  publico: Publico;
   prazoMedioDias: string;
 };
 
@@ -145,6 +149,7 @@ export function validarEmpresa(campos: CamposDaEmpresa) {
     nome,
     cnpj: formatarCnpj(campos.cnpj),
     regime: campos.regime,
+    publico: campos.publico,
     prazoMedioDias: prazo,
   };
   return { erros, dados };
@@ -158,4 +163,42 @@ export function validarEmail(texto: string): { erro?: string; email?: string } {
     return { erro: "Escreva o e-mail completo, como voce@suaempresa.com.br." };
   }
   return { email };
+}
+
+export const SENHA_MINIMA = 8;
+
+export type CamposDaConta = { nome: string; email: string; senha: string; confirmacao: string };
+
+/**
+ * Criar conta: nome, e-mail e uma senha de pelo menos 8 caracteres, digitada
+ * duas vezes. Sem servidor não há como recuperar a senha, então um erro de
+ * digitação aqui deixaria a pessoa fora da própria conta.
+ */
+export function validarConta(campos: CamposDaConta) {
+  const erros: Erros<CamposDaConta> = {};
+  const nome = campos.nome.trim();
+  if (!nome) erros.nome = "Falta o seu nome.";
+  const { erro, email } = validarEmail(campos.email);
+  if (erro) erros.email = erro;
+  if (campos.senha.length < SENHA_MINIMA) {
+    erros.senha = campos.senha ? `A senha precisa ter pelo menos ${SENHA_MINIMA} caracteres.` : "Falta a senha.";
+  } else if (!campos.confirmacao) {
+    erros.confirmacao = "Repita a senha para conferir.";
+  } else if (campos.confirmacao !== campos.senha) {
+    erros.confirmacao = "As duas senhas não são iguais.";
+  }
+  if (Object.keys(erros).length > 0 || !email) return { erros };
+  return { erros, conta: { nome, email, senha: campos.senha } };
+}
+
+export type CamposDeEntrada = { email: string; senha: string };
+
+/** Entrar: só confere se veio algo; quem diz se a senha bate é o armazenamento. */
+export function validarEntrada(campos: CamposDeEntrada) {
+  const erros: Erros<CamposDeEntrada> = {};
+  const { erro, email } = validarEmail(campos.email);
+  if (erro) erros.email = erro;
+  if (!campos.senha) erros.senha = "Falta a senha.";
+  if (Object.keys(erros).length > 0 || !email) return { erros };
+  return { erros, email, senha: campos.senha };
 }

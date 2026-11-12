@@ -1,7 +1,7 @@
 {
   "name": "previa",
   "productName": "Prévia",
-  "version": "0.1.0",
+  "version": "1.0.2",
   "description": "Simulador do impacto do split payment no caixa de pequenas empresas",
   "author": "Equipe Prévia",
   "private": true,

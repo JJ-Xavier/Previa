@@ -18,13 +18,13 @@ export function LinhaDoTempo() {
   const atual = ano < fases[0].de ? -1 : fases.findLastIndex((f) => f.de <= ano);
 
   return (
-    <ol aria-label="Fases da transição" className="mt-7 flex flex-wrap gap-1.5">
+    <ol aria-label="Fases da transição" className="mt-5 flex flex-wrap gap-1.5">
       {fases.map((fase, i) => (
         <li
           key={fase.de}
           aria-current={i === atual ? "step" : undefined}
           style={{ flex: `${fase.ate - fase.de + 1} 1 ${estilos[i].base}` }}
-          className={`flex min-h-[104px] flex-col justify-end gap-2 rounded-[18px] px-4 py-3.5 ${estilos[i].cor}`}
+          className={`flex min-h-[88px] flex-col justify-end gap-1.5 rounded-[18px] px-4 py-3 ${estilos[i].cor}`}
         >
           {i === atual && (
             <span className={`mb-auto self-start rounded-md px-2 py-0.5 text-xs font-semibold ${estilos[i].selo}`}>

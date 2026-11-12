@@ -8,7 +8,7 @@ import { SeloEmBreve } from "@/components/SeloEmBreve";
 import { TopoDaPagina } from "@/components/TopoDaPagina";
 import {
   adicionarVendas,
-  apagarTudo,
+  apagarConta,
   carregarExemplo,
   empresaAtiva,
   novoId,
@@ -16,7 +16,7 @@ import {
   useDados,
 } from "@/lib/armazenamento";
 import { dividirVenda } from "@/lib/calculo";
-import { dataCurta, nomeDoRegime, reais } from "@/lib/formatar";
+import { dataCurta, nomeDoPublico, nomeDoRegime, reais } from "@/lib/formatar";
 import { lerPlanilha, modeloDaPlanilha, textoDoArquivo } from "@/lib/planilha";
 import type { Empresa } from "@/lib/tipos";
 
@@ -34,6 +34,8 @@ export function Vendas() {
   return <VendasDaEmpresa key={empresa.id} empresa={empresa} salva={salva} />;
 }
 
+// A lista ocupa a coluna larga; as outras formas de colocar dados ficam na estreita,
+// para a tela caber na janela sem rolar à toa.
 function VendasDaEmpresa({ empresa, salva }: { empresa: Empresa; salva: string | null }) {
   const [aviso, setAviso] = useState<Aviso | null>(
     salva ? { tipo: "ok", texto: "Venda salva. O Painel já mostra o novo valor." } : null,
@@ -47,7 +49,8 @@ function VendasDaEmpresa({ empresa, salva }: { empresa: Empresa; salva: string |
       });
       return;
     }
-    const { vendas, erros } = lerPlanilha(textoDoArquivo(await arquivo.arrayBuffer()), empresa.prazoMedioDias);
+    const texto = textoDoArquivo(await arquivo.arrayBuffer());
+    const { vendas, erros } = lerPlanilha(texto, empresa.prazoMedioDias, empresa.publico);
     if (erros.length > 0) {
       setAviso({
         tipo: "erro",
@@ -67,20 +70,26 @@ function VendasDaEmpresa({ empresa, salva }: { empresa: Empresa; salva: string |
     <>
       <TopoDaPagina
         titulo="Vendas e recebimentos"
-        descricao="A simulação usa o que você coloca aqui. Quanto mais vendas lançadas, mais perto da realidade fica a previsão do seu caixa."
+        descricao="A simulação usa as vendas que você coloca aqui. Quanto mais vendas, mais perto da realidade."
       />
-      <main className="mx-auto flex max-w-[1200px] flex-col gap-12 px-4 pt-12 pb-[72px] sm:px-10">
+      <main className="mx-auto flex max-w-[1200px] flex-col gap-6 px-4 pt-8 pb-12 sm:px-10">
         <div aria-live="polite" className="empty:hidden">
           {aviso && <CaixaDeAviso aviso={aviso} aoFechar={() => setAviso(null)} />}
         </div>
-        <ComoColocar aoEscolherArquivo={importar} />
-        <Conexoes />
-        <ListaDeVendas
-          empresa={empresa}
-          destaque={salva}
-          aoExcluir={() => setAviso({ tipo: "ok", texto: "Venda excluída. O Painel já foi atualizado." })}
-        />
-        <SuaEmpresa empresa={empresa} />
+        <div className="flex flex-wrap items-start gap-x-6 gap-y-6">
+          <div className="flex min-w-0 flex-[1_1_600px] flex-col gap-6">
+            <ListaDeVendas
+              empresa={empresa}
+              destaque={salva}
+              aoExcluir={() => setAviso({ tipo: "ok", texto: "Venda excluída. O Painel já foi atualizado." })}
+            />
+            <SuaEmpresa empresa={empresa} />
+          </div>
+          <aside aria-label="Outras formas de colocar seus dados" className="flex min-w-0 flex-[0_1_264px] flex-col gap-4">
+            <OutrasFormas aoEscolherArquivo={importar} />
+            <Conexoes />
+          </aside>
+        </div>
       </main>
     </>
   );
@@ -91,7 +100,7 @@ function CaixaDeAviso({ aviso, aoFechar }: { aviso: Aviso; aoFechar: () => void 
   const cores = aviso.tipo === "ok" ? "bg-verde-fundo text-verde-escuro" : "bg-erro-fundo text-erro";
 
   return (
-    <div className={`flex items-start justify-between gap-4 rounded-bloco px-6 py-5 ${cores}`}>
+    <div className={`flex items-start justify-between gap-4 rounded-bloco px-6 py-4 ${cores}`}>
       <div className="flex flex-col gap-2">
         <p className="text-base font-semibold">{aviso.texto}</p>
         {linhas.length > 0 && (
@@ -119,7 +128,7 @@ function baixarModelo() {
   setTimeout(() => URL.revokeObjectURL(endereco), 1000);
 }
 
-function ComoColocar({ aoEscolherArquivo }: { aoEscolherArquivo: (arquivo: File) => void }) {
+function OutrasFormas({ aoEscolherArquivo }: { aoEscolherArquivo: (arquivo: File) => void }) {
   const arquivo = useRef<HTMLInputElement>(null);
 
   function escolheu(e: ChangeEvent<HTMLInputElement>) {
@@ -129,91 +138,67 @@ function ComoColocar({ aoEscolherArquivo }: { aoEscolherArquivo: (arquivo: File)
   }
 
   return (
-    <section aria-labelledby="como-titulo" className="flex flex-col gap-4">
-      <h2 id="como-titulo" className="font-display text-[26px] leading-tight font-bold tracking-[-0.02em]">
-        Como colocar seus dados
+    <section aria-labelledby="formas-titulo" className="flex flex-col rounded-bloco bg-papel px-5 py-4">
+      <h2 id="formas-titulo" className="sr-only">
+        Outras formas de colocar seus dados
       </h2>
-      <div className="flex flex-wrap items-stretch gap-4">
-        <div className="flex flex-[3_1_380px] flex-col gap-3 rounded-cartao bg-papel p-7">
-          <h3 className="font-display text-2xl font-bold tracking-[-0.02em]">Lançar uma venda</h3>
-          <p className="max-w-[34rem] text-[15px] leading-[1.55] text-texto-suave">
-            Digite o cliente, o valor e quando o dinheiro cai na conta. A Prévia já mostra quanto fica com você.
-          </p>
-          <Link href="/vendas/nova/" className="botao mt-auto self-start">
-            Lançar venda
-          </Link>
-        </div>
-        <div className="flex flex-[2_1_300px] flex-col gap-4">
-          <CartaoPequeno
-            titulo="Enviar uma planilha"
-            texto="Preencha o modelo no Excel e envie de volta. Sem a data de recebimento, a Prévia usa o seu prazo médio."
-          >
-            <button type="button" onClick={baixarModelo} className="botao-contorno">
-              Baixar modelo
-            </button>
-            <button type="button" onClick={() => arquivo.current?.click()} className="botao-contorno">
-              Enviar
-            </button>
-            <input ref={arquivo} type="file" accept=".csv,text/csv" onChange={escolheu} hidden />
-          </CartaoPequeno>
-          <CartaoPequeno
-            titulo="Usar dados de exemplo"
-            texto="Veja a Prévia funcionando antes de lançar as suas vendas."
-          >
-            <button type="button" onClick={carregarExemplo} className="botao-contorno">
-              Carregar exemplo
-            </button>
-          </CartaoPequeno>
-        </div>
-      </div>
+      <Forma
+        titulo="Enviar uma planilha"
+        texto="Preencha o modelo no Excel e envie de volta. Sem a data de recebimento, vale o seu prazo médio."
+      >
+        <button type="button" onClick={baixarModelo} className="botao-contorno">
+          Baixar modelo
+        </button>
+        <button type="button" onClick={() => arquivo.current?.click()} className="botao-contorno">
+          Enviar planilha
+        </button>
+        <input ref={arquivo} type="file" accept=".csv,text/csv" onChange={escolheu} hidden />
+      </Forma>
+      <Forma titulo="Usar dados de exemplo" texto="Seis meses de vendas para ver a Prévia funcionando.">
+        <button type="button" onClick={carregarExemplo} className="botao-contorno">
+          Carregar exemplo
+        </button>
+      </Forma>
     </section>
   );
 }
 
-function CartaoPequeno({ titulo, texto, children }: { titulo: string; texto: string; children: ReactNode }) {
+function Forma({ titulo, texto, children }: { titulo: string; texto: string; children: ReactNode }) {
   return (
-    <div className="flex flex-auto flex-wrap items-center justify-between gap-3 rounded-bloco bg-papel px-[22px] py-5">
-      <div className="flex flex-[1_1_180px] flex-col gap-1">
-        <h3 className="text-[17px] font-semibold">{titulo}</h3>
-        <p className="text-sm leading-normal text-texto-suave">{texto}</p>
-      </div>
-      <div className="flex gap-2">{children}</div>
+    <div className="flex flex-col gap-2 border-b border-linha-suave py-3 last:border-b-0">
+      <h3 className="text-base font-semibold">{titulo}</h3>
+      <p className="text-sm leading-normal text-texto-suave">{texto}</p>
+      <div className="mt-1 flex flex-wrap gap-2">{children}</div>
     </div>
   );
 }
 
 const conexoes = [
-  ["Notas fiscais (NF-e)", "Direto da SEFAZ ou pelo arquivo XML", "/em-breve/nfe/"],
-  ["Banco (Open Finance)", "Recebimentos da conta da empresa, com sua autorização", "/em-breve/banco/"],
-  ["Sistema de gestão (ERP)", "As vendas do sistema que você já usa", "/em-breve/erp/"],
+  ["Notas fiscais (NF-e)", "/em-breve/nfe/"],
+  ["Banco (Open Finance)", "/em-breve/banco/"],
+  ["Sistema de gestão (ERP)", "/em-breve/erp/"],
 ];
 
 function Conexoes() {
   return (
     <section
       aria-labelledby="conexoes-titulo"
-      className="flex flex-col gap-1.5 rounded-cartao border-[1.5px] border-dashed border-tracejado px-7 py-6"
+      className="flex flex-col rounded-bloco border-[1.5px] border-dashed border-tracejado px-5 py-4"
     >
-      <div className="flex flex-wrap items-center gap-3">
-        <h2 id="conexoes-titulo" className="font-display text-[22px] font-bold tracking-[-0.02em]">
+      <div className="flex flex-wrap items-center gap-2.5">
+        <h2 id="conexoes-titulo" className="text-base font-semibold">
           Conexões automáticas
         </h2>
         <SeloEmBreve />
       </div>
-      <p className="mb-1.5 text-[15px] text-texto-suave">Em breve seus dados vão entrar sozinhos, sem digitar nada.</p>
-      {conexoes.map(([nome, detalhe, href]) => (
-        <div
-          key={nome}
-          className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-t border-linha py-3.5 last:pb-1"
-        >
-          <div className="flex flex-col gap-0.5">
-            <span className="text-base font-semibold">{nome}</span>
-            <span className="text-sm text-texto-suave">{detalhe}</span>
-          </div>
+      <p className="mt-1 mb-1 text-sm text-texto-suave">Seus dados vão entrar sozinhos, sem digitar nada.</p>
+      {conexoes.map(([nome, href]) => (
+        <div key={nome} className="flex flex-wrap items-center justify-between gap-x-3 border-t border-linha py-1.5">
+          <span className="text-[15px] font-medium">{nome}</span>
           <Link
             href={href}
             aria-label={`Quero ser avisado: ${nome}`}
-            className="inline-flex min-h-11 items-center text-[15px] font-semibold"
+            className="inline-flex min-h-10 items-center text-sm font-semibold"
           >
             Quero ser avisado
           </Link>
@@ -223,8 +208,9 @@ function Conexoes() {
   );
 }
 
-const QUANTAS_MOSTRAR = 8;
-const celula = "px-[22px] py-4 border-b border-linha-suave";
+const QUANTAS_MOSTRAR = 6;
+const cabecalho = "border-b border-linha px-3 py-3 font-semibold whitespace-nowrap";
+const celula = "border-b border-linha-suave px-3 py-3 whitespace-nowrap";
 
 type ListaProps = { empresa: Empresa; destaque: string | null; aoExcluir: () => void };
 
@@ -238,47 +224,52 @@ function ListaDeVendas({ empresa, destaque, aoExcluir }: ListaProps) {
   const visiveis = verTodas ? vendas : vendas.slice(0, QUANTAS_MOSTRAR);
 
   return (
-    <section aria-labelledby="ultimas-titulo" className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-baseline justify-between gap-3">
-        <h2 id="ultimas-titulo" className="font-display text-[26px] leading-tight font-bold tracking-[-0.02em]">
-          Últimas vendas lançadas
-        </h2>
-        {vendas.length > QUANTAS_MOSTRAR && (
-          <button
-            type="button"
-            onClick={() => setVerTodas(!verTodas)}
-            className="cursor-pointer text-[15px] font-semibold text-verde-texto hover:text-verde-escuro"
-          >
-            {verTodas ? "Ver só as últimas" : `Ver todas (${vendas.length})`}
-          </button>
-        )}
+    <section aria-labelledby="ultimas-titulo" className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+          <h2 id="ultimas-titulo" className="font-display text-2xl leading-tight font-bold tracking-[-0.02em]">
+            Últimas vendas lançadas
+          </h2>
+          {vendas.length > QUANTAS_MOSTRAR && (
+            <button
+              type="button"
+              onClick={() => setVerTodas(!verTodas)}
+              className="cursor-pointer text-[15px] font-semibold text-verde-texto hover:text-verde-escuro"
+            >
+              {verTodas ? "Ver só as últimas" : `Ver todas (${vendas.length})`}
+            </button>
+          )}
+        </div>
+        <Link href="/vendas/nova/" className="botao min-h-11 px-6 text-[15px]">
+          Lançar venda
+        </Link>
       </div>
 
       {vendas.length === 0 ? (
-        <p className="rounded-bloco bg-papel px-[22px] py-6 text-[15px] text-texto-suave">
-          Nenhuma venda lançada ainda. Lance a primeira ou envie uma planilha.
+        <p className="rounded-bloco bg-papel px-5 py-6 text-[15px] text-texto-suave">
+          Nenhuma venda lançada ainda. Lance a primeira, envie uma planilha ou carregue o exemplo.
         </p>
       ) : (
         <div role="region" aria-labelledby="ultimas-titulo" tabIndex={0} className="relative overflow-x-auto rounded-bloco bg-papel">
-          <table className="w-full min-w-[820px] border-collapse text-[15px] tabular-nums">
+          <table className="w-full border-collapse text-[15px] tabular-nums">
             <thead>
               <tr className="text-[13px] text-texto-suave">
-                <th scope="col" className="border-b border-linha px-[22px] py-4 text-left font-semibold">
+                <th scope="col" className={`${cabecalho} text-left`}>
                   Cliente
                 </th>
-                <th scope="col" className="border-b border-linha px-[22px] py-4 text-left font-semibold">
+                <th scope="col" className={`${cabecalho} text-left`}>
                   Recebimento
                 </th>
-                <th scope="col" className="border-b border-linha px-[22px] py-4 text-right font-semibold">
+                <th scope="col" className={`${cabecalho} text-right`}>
                   Venda
                 </th>
-                <th scope="col" className="border-b border-linha px-[22px] py-4 text-right font-semibold text-ambar-texto">
+                <th scope="col" className={`${cabecalho} text-right text-ambar-texto`}>
                   Governo
                 </th>
-                <th scope="col" className="border-b border-linha px-[22px] py-4 text-right font-semibold text-verde-texto">
+                <th scope="col" className={`${cabecalho} text-right text-verde-texto`}>
                   Fica com você
                 </th>
-                <th scope="col" className="border-b border-linha px-[22px] py-4">
+                <th scope="col" className={cabecalho}>
                   <span className="sr-only">Ações</span>
                 </th>
               </tr>
@@ -289,7 +280,12 @@ function ListaDeVendas({ empresa, destaque, aoExcluir }: ListaProps) {
                 const nome = `venda de ${venda.cliente} recebida em ${dataCurta(venda.dataRecebimento)}`;
                 return (
                   <tr key={venda.id} className={`last:[&>td]:border-b-0 ${venda.id === destaque ? "bg-verde-fundo" : ""}`}>
-                    <td className={`${celula} font-medium`}>{venda.cliente}</td>
+                    <td className={`${celula} font-medium`}>
+                      {/* Nome comprido termina em "..."; o nome inteiro aparece ao passar o mouse. */}
+                      <span className="block max-w-52 truncate min-[1400px]:max-w-80" title={venda.cliente}>
+                        {venda.cliente}
+                      </span>
+                    </td>
                     <td className={`${celula} text-texto-suave`}>{dataCurta(venda.dataRecebimento)}</td>
                     <td className={`${celula} text-right`}>{reais(venda.valor)}</td>
                     <td className={`${celula} text-right text-ambar-texto`}>{reais(governo)}</td>
@@ -350,51 +346,51 @@ function SuaEmpresa({ empresa }: { empresa: Empresa }) {
   const contador = useDados()?.perfil === "contador";
   const [confirmando, setConfirmando] = useState(false);
   const itens = [
-    ["Nome", empresa.nome],
     ["CNPJ", empresa.cnpj],
     ["Regime", nomeDoRegime(empresa.regime)],
+    ["Vende para", nomeDoPublico(empresa.publico)],
     ["Prazo médio", `${empresa.prazoMedioDias} dias`],
   ];
 
   return (
-    <section
-      aria-labelledby="empresa-titulo"
-      className="flex flex-col gap-5 rounded-cartao border-[1.5px] border-linha px-7 py-6"
-    >
-      <h2 id="empresa-titulo" className="font-display text-[22px] font-bold tracking-[-0.02em]">
-        {contador ? "Dados do cliente" : "Sua empresa"}
-      </h2>
-      <dl className="grid grid-cols-[repeat(auto-fit,minmax(180px,1fr))] gap-x-8 gap-y-4">
+    <section aria-labelledby="empresa-titulo" className="flex flex-col gap-4 rounded-bloco border-[1.5px] border-linha px-5 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="empresa-titulo" className="text-base font-semibold">
+          {contador ? "Dados do cliente" : "Sua empresa"}: {empresa.nome}
+        </h2>
+        {!confirmando && (
+          <div className="flex flex-wrap gap-2">
+            <Link href="/empresa/" className="botao-contorno">
+              Editar dados
+            </Link>
+            <button type="button" onClick={() => setConfirmando(true)} className="botao-contorno">
+              Apagar meus dados
+            </button>
+          </div>
+        )}
+      </div>
+      <dl className="grid grid-cols-[repeat(auto-fit,minmax(140px,1fr))] gap-x-6 gap-y-3">
         {itens.map(([rotulo, valor]) => (
-          <div key={rotulo} className="flex flex-col gap-1">
+          <div key={rotulo} className="flex flex-col gap-0.5">
             <dt className="text-[13px] text-texto-suave">{rotulo}</dt>
-            <dd className="text-base font-semibold">{valor}</dd>
+            <dd className="text-[15px] font-semibold">{valor}</dd>
           </div>
         ))}
       </dl>
 
-      {confirmando ? (
+      {confirmando && (
         <div role="alert" className="flex flex-col gap-3 rounded-bloco bg-erro-fundo px-5 py-4">
           <p className="text-[15px] font-semibold text-erro">
-            Isso apaga todas as empresas e vendas guardadas neste computador. Não dá para desfazer.
+            Isso apaga a sua conta e todas as empresas e vendas dela neste computador. Não dá para desfazer.
           </p>
           <div className="flex flex-wrap gap-3">
-            <button type="button" onClick={apagarTudo} className="botao min-h-11 bg-erro px-5 text-[15px] hover:bg-[#912018]">
-              Apagar tudo
+            <button type="button" onClick={apagarConta} className="botao min-h-11 bg-erro px-5 text-[15px] hover:bg-[#912018]">
+              Apagar conta e dados
             </button>
             <button type="button" onClick={() => setConfirmando(false)} className="botao-texto">
               Cancelar
             </button>
           </div>
-        </div>
-      ) : (
-        <div className="flex flex-wrap gap-3">
-          <Link href="/empresa/" className="botao-contorno">
-            Editar dados
-          </Link>
-          <button type="button" onClick={() => setConfirmando(true)} className="botao-contorno">
-            Apagar meus dados
-          </button>
         </div>
       )}
       <p className="text-[13px] text-texto-suave">

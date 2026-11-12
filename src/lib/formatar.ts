@@ -1,4 +1,4 @@
-import type { Centavos, DataISO, Mes, Regime } from "./tipos";
+import type { Centavos, DataISO, Mes, Publico, Regime } from "./tipos";
 
 const comCentavos = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
 const semCentavos = new Intl.NumberFormat("pt-BR", {
@@ -53,7 +53,17 @@ export function intervaloDeMeses(inicio: Mes, fim: Mes): string {
   return comMaiuscula(`${nomeDoMes(inicio, { ano: !mesmoAno })} a ${nomeDoMes(fim)}`);
 }
 
-const REGIMES: Record<Regime, string> = { simples: "Simples Nacional", presumido: "Lucro Presumido" };
+const REGIMES: Record<Regime, string> = {
+  mei: "MEI",
+  simples: "Simples Nacional",
+  presumido: "Lucro Presumido",
+  real: "Lucro Real",
+};
+
+/** Para quem a empresa vende mais. Empresa sem essa informação vende para outras empresas. */
+export function nomeDoPublico(publico: Publico = "empresas"): string {
+  return publico === "consumidor" ? "Consumidor final" : "Outras empresas";
+}
 
 /** "simples" vira "Simples Nacional". */
 export function nomeDoRegime(regime: Regime): string {

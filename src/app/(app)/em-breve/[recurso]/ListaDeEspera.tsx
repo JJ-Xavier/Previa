@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Campo } from "@/components/Campo";
-import { pedirAviso, useDados } from "@/lib/armazenamento";
+import { pedirAviso, useConta, useDados } from "@/lib/armazenamento";
 import { validarEmail } from "@/lib/entrada";
 
 type Props = { recurso: string; nome: string };
@@ -10,6 +10,7 @@ type Props = { recurso: string; nome: string };
 // "Quero ser avisado": guarda o e-mail neste computador, na lista de espera do recurso.
 export function ListaDeEspera({ recurso, nome }: Props) {
   const dados = useDados();
+  const conta = useConta();
   const [trocando, setTrocando] = useState(false);
   const [digitado, setDigitado] = useState<string | null>(null);
   const [erro, setErro] = useState<string>();
@@ -23,7 +24,7 @@ export function ListaDeEspera({ recurso, nome }: Props) {
 
   const salvo = dados?.avisos?.[recurso];
   // Começa com o e-mail de Entrar, que quase sempre é o mesmo.
-  const texto = digitado ?? salvo ?? dados?.acesso?.email ?? "";
+  const texto = digitado ?? salvo ?? conta?.email ?? "";
 
   function enviar(e: FormEvent) {
     e.preventDefault();

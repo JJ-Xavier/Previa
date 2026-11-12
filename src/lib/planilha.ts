@@ -1,5 +1,5 @@
 import { validarVenda } from "./entrada";
-import type { Venda } from "./tipos";
+import type { Publico, Venda } from "./tipos";
 
 /*
   Planilha de vendas em CSV. Usa ponto e vírgula, que é o que o Excel em
@@ -32,7 +32,7 @@ export function textoDoArquivo(bytes: ArrayBuffer): string {
  * Lê as vendas da planilha. Se alguma linha tiver erro, `erros` lista cada
  * uma, e a tela não importa nada: assim corrigir e enviar de novo não duplica.
  */
-export function lerPlanilha(texto: string, prazoMedioDias: number) {
+export function lerPlanilha(texto: string, prazoMedioDias: number, publico: Publico = "empresas") {
   const linhas = texto.replace(/^﻿/, "").split(/\r?\n/);
   const separador = linhas[0].includes(";") ? ";" : ",";
   const vendas: Omit<Venda, "id">[] = [];
@@ -43,7 +43,7 @@ export function lerPlanilha(texto: string, prazoMedioDias: number) {
     if (i === 0 || /^[;,\s]*$/.test(linha)) return;
     const [cliente = "", cnpjCliente = "", valor = "", dataVenda = "", dataRecebimento = ""] =
       dividirLinha(linha, separador);
-    const lida = validarVenda({ cliente, cnpjCliente, valor, dataVenda, dataRecebimento }, prazoMedioDias);
+    const lida = validarVenda({ cliente, cnpjCliente, valor, dataVenda, dataRecebimento }, prazoMedioDias, publico);
     if (lida.venda) vendas.push(lida.venda);
     else erros.push(`Linha ${i + 1}: ${Object.values(lida.erros).join(" ")}`);
   });

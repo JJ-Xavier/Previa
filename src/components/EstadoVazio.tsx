@@ -27,7 +27,7 @@ export function EstadoVazio({ titulo, temEmpresa }: Props) {
         titulo={titulo}
         descricao="A Prévia mostra quanto de cada venda fica com você e quanto vai para o governo com o split payment."
       />
-      <main className="mx-auto max-w-[1200px] px-4 pt-14 pb-[72px] sm:px-10">
+      <main className="mx-auto max-w-[1200px] px-4 pt-8 pb-12 sm:px-10">
         <section
           aria-labelledby="vazio-titulo"
           className="flex max-w-2xl flex-col gap-3 rounded-cartao bg-papel p-6 sm:p-8"

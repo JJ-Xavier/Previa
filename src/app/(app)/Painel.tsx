@@ -48,7 +48,7 @@ function PainelDaEmpresa({ empresa, visao }: { empresa: Empresa; visao: VisaoGer
       <div className="faixa bg-petroleo text-mineral-claro">
         <section
           aria-labelledby="hero-titulo"
-          className="mx-auto flex max-w-[1200px] flex-col px-4 pt-10 pb-14 sm:px-10"
+          className="mx-auto flex max-w-[1200px] flex-col px-4 pt-6 pb-10 sm:px-10"
         >
           <div className="flex items-center gap-1">
             <p aria-live="polite" className="mr-1 text-base text-nevoa">
@@ -95,7 +95,7 @@ function PainelDaEmpresa({ empresa, visao }: { empresa: Empresa; visao: VisaoGer
         </section>
       </div>
 
-      <main className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-12 px-4 pt-14 pb-[72px] sm:px-10">
+      <main className="mx-auto flex max-w-[1200px] flex-wrap items-start gap-10 px-4 pt-10 pb-12 sm:px-10">
         <section aria-labelledby="meses-titulo" className="flex min-w-0 flex-[3_1_560px] flex-col gap-2">
           <h2 id="meses-titulo" className="font-display text-[30px] leading-tight font-bold tracking-[-0.02em]">
             {inicio >= hoje ? "Os próximos seis meses" : "Seis meses de recebimentos"}
